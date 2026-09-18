@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Podcasty - týden 1: Bayesovská optimalizace</title>
+<style>
+  body { margin: 0; padding: 3rem 1.25rem; background: #fbfcfd; color: #17212b;
+         font-family: "Aptos", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 17px; line-height: 1.5; }
+  main { max-width: 40rem; margin: 0 auto; }
+  h1 { color: #12355b; font-weight: 650; font-size: 1.7rem; margin: 0 0 .25rem; }
+  p.sub { color: #5b6b7a; margin: 0 0 2rem; }
+  h2 { color: #12355b; font-weight: 650; font-size: 1.15rem; margin: 1.75rem 0 .5rem; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { margin: .35rem 0; }
+  .note { color: #5b6b7a; font-size: .9rem; }
+  a { color: #007f86; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  footer { margin-top: 3rem; color: #5b6b7a; font-size: .9rem; }
+  h1 .topic { display: block; color: #17212b; font-weight: 500; font-size: 1.15rem; margin-top: .4rem; }
+  h3 { color: #12355b; font-weight: 650; font-size: 1rem; margin: 1.3rem 0 .4rem; }
+  .alt { color: #5b6b7a; font-weight: 500; }
+  p { margin: .6rem 0; }
+  .warn { border-left: 3px solid #c08a1e; background: #fdf7ea; padding: .7rem .95rem; margin: 1.1rem 0; }
+  .warn strong { color: #12355b; }
+  section.en { color: #3a4652; border-top: 1px solid #dde3e9; margin-top: 2.2rem; padding-top: .6rem; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; margin: .5rem 0; }
+  .row .lang { min-width: 4.6rem; font-weight: 650; color: #12355b; }
+  .row audio { height: 2.1rem; flex: 1 1 15rem; max-width: 20rem; }
+  .row .meta { color: #5b6b7a; font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>Podcasty — týden 1<span class="topic">Bayesovská optimalizace</span></h1>
+<p class="sub">Computer-Aided Medical Diagnostics (MPA-PRM) · Tomáš Vičar · FEKT VUT</p>
+
+<h2>Co to je</h2>
+<p>Dva hlasy si povídají o látce přednášky a cvičení. Scénář napsal jazykový model z podkladů kurzu (slidy, poznámky přednášejícího, notebooky ke cvičení) a přečetl ho syntetizátor řeči běžící lokálně na našem počítači. Jsou to tedy umělé hlasy: občas znějí divně, přeřeknou se nebo něco řeknou nepřesně.</p>
+
+<div class="warn"><strong>Podcast nenahrazuje přednášku ani cvičení.</strong> Je to doplněk na cestu a k opakování. Vzorce, obrázky, odvození a kód se do zvuku nevejdou — ty jsou ve slidech a v notebooku. Co se probírá a co se bude zkoušet, určuje přednáška a cvičení, ne podcast.</div>
+
+<section class="en" lang="en">
+<h2>What this is</h2>
+<p>Two voices talking through the material of the lecture and the lab. The script was written by a language model from the course material (slides, speaker notes, lab notebooks) and read by a text-to-speech engine running locally on our own machine. These are synthetic voices: now and then they sound odd, misspeak, or put something imprecisely.</p>
+
+<div class="warn"><strong>The podcast replaces neither the lecture nor the lab.</strong> It is a companion for the commute and for revision. Formulas, figures, derivations and code do not fit into audio — they are in the slides and in the notebook. What is taught and what is examined is set by the lecture and the lab, not by the podcast.</div>
+</section>
+
+<h2>Epizody <span class="alt">· Episodes</span></h2>
+<h3>Přednáška <span class="alt">· Lecture</span></h3>
+<div class="row"><span class="lang">Česky</span><audio controls preload="none" src="2026-09-09-bo-lecture-talk-cs.opus"></audio><span class="meta">69 min · 12 MB</span><a href="2026-09-09-bo-lecture-talk-cs.opus" download="2026-09-09-bo-lecture-talk-cs.opus" type="audio/ogg">uložit · save</a></div>
+<div class="row"><span class="lang">English</span><audio controls preload="none" src="2026-09-09-bo-lecture-talk-en.opus"></audio><span class="meta">71 min · 13 MB</span><a href="2026-09-09-bo-lecture-talk-en.opus" download="2026-09-09-bo-lecture-talk-en.opus" type="audio/ogg">uložit · save</a></div>
+<h3>Cvičení <span class="alt">· Lab</span></h3>
+<div class="row"><span class="lang">Česky</span><audio controls preload="none" src="2026-09-09-bo-lab-talk-cs.opus"></audio><span class="meta">55 min · 10 MB</span><a href="2026-09-09-bo-lab-talk-cs.opus" download="2026-09-09-bo-lab-talk-cs.opus" type="audio/ogg">uložit · save</a></div>
+<div class="row"><span class="lang">English</span><audio controls preload="none" src="2026-09-09-bo-lab-talk-en.opus"></audio><span class="meta">56 min · 10 MB</span><a href="2026-09-09-bo-lab-talk-en.opus" download="2026-09-09-bo-lab-talk-en.opus" type="audio/ogg">uložit · save</a></div>
+<p class="note">Přehrávač hraje v prohlížeči, odkaz <em>uložit</em> stáhne soubor; formát Opus přehraje prohlížeč, VLC i telefon.<br>
+The player plays in the browser, <em>save</em> downloads the file; the Opus format is played by a browser, VLC and a phone alike.</p>
+
+<footer><a href="../index.html">AUI — lectures and labs</a></footer>
+</main>
+</body>
+</html>
