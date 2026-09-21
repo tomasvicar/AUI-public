@@ -1,6 +1,6 @@
 # Leaf photographs
 
-`ex08_leaves_images.zip` is an unchanged copy of the MLR teaching dataset:
+`leaf_species_images.zip` is an unchanged copy of the MLR teaching dataset:
 https://github.com/tomasvicar/MLR-public/blob/master/exercises/data/ex08_leaves_images.zip
 
 SHA-256: `f7bbaa9aa161bd1c334e2fe3fe8b5e93af216ff1664f2571d3572eace555cf53`.
@@ -22,3 +22,6 @@ No separate open-content licence is asserted for these photographs.
 The author requested this repository copy on 21 September 2026 to remove
 the notebook's runtime dependency on the MLR repository. The archive is
 published with the student notebook; extracted `leaves/` files are a cache.
+
+Renamed on 21 September 2026 to describe the contents rather than the source
+course exercise number. The SHA-256 and internal layout are unchanged.

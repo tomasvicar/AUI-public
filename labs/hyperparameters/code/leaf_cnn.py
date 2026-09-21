@@ -6,10 +6,10 @@ the MLR course (`MLR-public/exercises/data/ex08_leaves_images.zip`); it is
 vendored unchanged in this lab's data directory.
 
 Everything here is written so that **one training is cheap**: the images are
-resized to 48 x 48 and held in memory as one tensor, the network has three
+read by a custom Dataset and resized to 48 x 48, the network has three
 convolutional blocks, and the default budget is 8 epochs. One training takes
-from 3 to 18 seconds on two CPU threads, depending on the width of the network,
-so a search of a dozen trials fits inside a lab.
+seconds to tens of seconds on two CPU threads, depending on network width and
+augmentation, so a search of a dozen trials fits inside a lab.
 
 The notebook of the lab contains a copy of this code (it has to run in Colab,
 where the repository does not exist); `build_notebooks.py --check` compares the
@@ -18,28 +18,25 @@ copy with this module.
 Run from the repository root:
 
     uv run python labs/hyperparameters/code/leaf_cnn.py            # data, one training
-    uv run python labs/hyperparameters/code/leaf_cnn.py --search   # + both searches (~3 min)
+    uv run python labs/hyperparameters/code/leaf_cnn.py --search   # + both searches
 """
 
-import glob
 import os
+import math
 import sys
 import time
 import urllib.request
 import zipfile
 from pathlib import Path
 
-import numpy as np
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
+from leaf_data import CLASSES, IMAGE_SIZE, make_loaders, split_leaf_samples
 
-DATA_URL = "https://raw.githubusercontent.com/tomasvicar/AUI-public/master/labs/hyperparameters/data/ex08_leaves_images.zip"
+DATA_URL = "https://raw.githubusercontent.com/tomasvicar/AUI-public/master/labs/hyperparameters/data/leaf_species_images.zip"
 DATA_ROOT = Path(__file__).resolve().parents[1] / "data"
-DATA_ARCHIVE = DATA_ROOT / "ex08_leaves_images.zip"
+DATA_ARCHIVE = DATA_ROOT / "leaf_species_images.zip"
 
-IMAGE_SIZE = 48          # the photographs are 96 x 96; smaller = faster training
-CLASSES = ["apple", "cherry", "chestnut", "maple"]
 N_EPOCHS = 8             # fixed part of the budget, not a tuned hyperparameter
 
 
@@ -51,7 +48,7 @@ def download_leaves(root: Path = DATA_ROOT) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     leaves = root / "leaves"
     if not leaves.exists():
-        archive = root / "ex08_leaves_images.zip"
+        archive = root / "leaf_species_images.zip"
         if DATA_ARCHIVE.is_file():
             archive = DATA_ARCHIVE
         elif not archive.is_file():
@@ -61,38 +58,9 @@ def download_leaves(root: Path = DATA_ROOT) -> Path:
     return leaves
 
 
-def load_split(leaves: Path, split: str):
-    """All images of one split as one float tensor (n, 3, size, size) and labels."""
-    from PIL import Image
-
-    files = sorted(glob.glob(str(leaves / split / "*" / "*.jpg")))
-    size = IMAGE_SIZE
-    images = np.stack([
-        np.asarray(Image.open(f).convert("RGB").resize((size, size)), dtype=np.float32) / 255.0
-        for f in files
-    ])
-    labels = [CLASSES.index(os.path.basename(os.path.dirname(f))) for f in files]
-    return (torch.from_numpy(images).permute(0, 3, 1, 2),
-            torch.tensor(labels, dtype=torch.long))
-
-
 def load_leaves(root: Path = DATA_ROOT):
-    """Training, validation and test tensors.
-
-    The archive has two folders, `train` (700 images) and `val` (120). The 120
-    are split in half into a **validation** set, which every trial of the search
-    sees, and a **test** set, which is looked at once at the very end - the
-    tuned validation number is optimistic exactly because the search chose the
-    best of many.
-    """
-    leaves = download_leaves(root)
-    x_train, y_train = load_split(leaves, "train")
-    x_rest, y_rest = load_split(leaves, "val")
-
-    order = torch.randperm(len(y_rest), generator=torch.Generator().manual_seed(0))
-    validation, test = order[:60], order[60:]
-    return (x_train, y_train, x_rest[validation], y_rest[validation],
-            x_rest[test], y_rest[test])
+    """Return fixed training, validation and test file/label lists."""
+    return split_leaf_samples(download_leaves(root))
 
 
 # --------------------------------------------------------------- the network
@@ -124,21 +92,28 @@ class LeafCNN(nn.Module):
         return self.classifier(self.features(x))
 
 
-def accuracy(model, x, y, device) -> float:
+def accuracy(model, loader, device) -> float:
+    """Count correct predictions across all batches, including a short last one."""
     model.eval()
-    with torch.no_grad():
-        return float((model(x.to(device)).argmax(1).cpu() == y).float().mean())
+    correct, total = 0, 0
+    with torch.inference_mode():
+        for images, labels in loader:
+            images, labels = images.to(device), labels.to(device)
+            correct += (model(images).argmax(1) == labels).sum().item()
+            total += len(labels)
+    return correct / total
 
 
-def train_and_validate(x_train, y_train, x_valid, y_valid, *,
+def train_and_validate(train_samples, valid_samples, *,
                        learning_rate: float = 1e-3, weight_decay: float = 0.0,
                        n_filters: int = 16, dropout: float = 0.0,
-                       batch_size: int = 32, n_epochs: int = N_EPOCHS,
+                       batch_size: int = 32, rotation_deg: float = 0.0,
+                       color_jitter: float = 0.0, n_epochs: int = N_EPOCHS,
                        seed: int = 0, device=None,
                        history: list | None = None) -> float:
     """Train one configuration from scratch and return its validation accuracy.
 
-    **This is one evaluation of the black box.** Five hyperparameters in, one
+    **This is one evaluation of the black box.** Seven hyperparameters in, one
     number out; everything else - the data, the number of epochs, the seed - is
     held fixed, so two calls differ only by what was tuned.
     """
@@ -149,9 +124,8 @@ def train_and_validate(x_train, y_train, x_valid, y_valid, *,
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate,
                                  weight_decay=weight_decay)
     criterion = nn.CrossEntropyLoss()
-    loader = DataLoader(TensorDataset(x_train, y_train),
-                        batch_size=int(batch_size), shuffle=True,
-                        generator=torch.Generator().manual_seed(seed))
+    loader, valid_loader = make_loaders(train_samples, valid_samples, batch_size,
+                                        rotation_deg, color_jitter, seed)
 
     for _ in range(int(n_epochs)):
         model.train()
@@ -162,42 +136,45 @@ def train_and_validate(x_train, y_train, x_valid, y_valid, *,
             loss.backward()
             optimizer.step()
         if history is not None:
-            history.append(accuracy(model, x_valid, y_valid, device))
+            history.append(accuracy(model, valid_loader, device))
 
-    return accuracy(model, x_valid, y_valid, device)
+    return accuracy(model, valid_loader, device)
 
 
 # ------------------------------------------------------- the reference runs
 
 
 DEFAULT_CONFIG = dict(learning_rate=1e-3, weight_decay=0.0, n_filters=16,
-                      dropout=0.0, batch_size=32)
+                      dropout=0.0, batch_size=32, rotation_deg=0.0, color_jitter=0.0)
 
-# The search space, written once and read by both searches. The two continuous
-# parameters are searched on a log scale (the lecture's point); `bayes_opt`
-# knows only boxes of real numbers, so the integer and the categorical one are
-# its problem, not Optuna's.
+# The two positive scale parameters are searched in logarithms. The box
+# interface rounds the filter count and fixes batch size; Optuna uses explicit
+# integer/categorical suggestions. Both tune the two augmentation strengths.
 SPACE = {
-    "log_learning_rate": (-4.0, -1.5),     # 1e-4 ... 3e-2
+    "log_learning_rate": (-4.0, math.log10(3e-2)),     # 1e-4 ... 3e-2
     "log_weight_decay": (-6.0, -2.0),      # 1e-6 ... 1e-2
     "n_filters": (8.0, 24.0),              # integer, rounded inside the objective
     "dropout": (0.0, 0.5),
+    "rotation_deg": (0.0, 45.0),
+    "color_jitter": (0.0, 0.4),
 }
 BATCH_SIZES = [16, 32, 64]                 # the discrete parameter added in Optuna
 
 
 def bayes_opt_search(data, n_init=4, n_iter=8, seed=0, verbose=2):
-    """`bayes_opt` over the four continuous hyperparameters."""
+    """`bayes_opt` over model and augmentation hyperparameters."""
     from bayes_opt import BayesianOptimization
 
-    x_train, y_train, x_valid, y_valid = data[:4]
+    train_samples, valid_samples = data[:2]
 
-    def objective(log_learning_rate, log_weight_decay, n_filters, dropout):
+    def objective(log_learning_rate, log_weight_decay, n_filters, dropout,
+                  rotation_deg, color_jitter):
         return train_and_validate(
-            x_train, y_train, x_valid, y_valid,
+            train_samples, valid_samples,
             learning_rate=10**log_learning_rate,
             weight_decay=10**log_weight_decay,
-            n_filters=int(round(n_filters)), dropout=dropout)
+            n_filters=int(round(n_filters)), dropout=dropout,
+            rotation_deg=rotation_deg, color_jitter=color_jitter)
 
     optimizer = BayesianOptimization(f=objective, pbounds=SPACE,
                                      random_state=seed, verbose=verbose)
@@ -209,15 +186,17 @@ def optuna_search(data, n_trials=12, seed=0):
     """The same space in Optuna, plus the batch size as a discrete parameter."""
     import optuna
 
-    x_train, y_train, x_valid, y_valid = data[:4]
+    train_samples, valid_samples = data[:2]
 
     def objective(trial):
         return train_and_validate(
-            x_train, y_train, x_valid, y_valid,
+            train_samples, valid_samples,
             learning_rate=trial.suggest_float("learning_rate", 1e-4, 3e-2, log=True),
             weight_decay=trial.suggest_float("weight_decay", 1e-6, 1e-2, log=True),
             n_filters=trial.suggest_int("n_filters", 8, 24),
             dropout=trial.suggest_float("dropout", 0.0, 0.5),
+            rotation_deg=trial.suggest_float("rotation_deg", 0.0, 45.0),
+            color_jitter=trial.suggest_float("color_jitter", 0.0, 0.4),
             batch_size=trial.suggest_categorical("batch_size", BATCH_SIZES))
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
@@ -230,11 +209,11 @@ def optuna_search(data, n_trials=12, seed=0):
 def main() -> None:
     torch.set_num_threads(min(2, os.cpu_count() or 1))   # about what Colab gives
     data = load_leaves()
-    x_train, y_train, x_valid, y_valid, x_test, y_test = data
-    print(f"train {len(y_train)}  validation {len(y_valid)}  test {len(y_test)} "
+    train_samples, valid_samples, test_samples = data
+    print(f"train {len(train_samples)}  validation {len(valid_samples)}  test {len(test_samples)} "
           f"images of {IMAGE_SIZE} x {IMAGE_SIZE}, {len(CLASSES)} classes")
     print("class counts in the training set:",
-          {c: int((y_train == i).sum()) for i, c in enumerate(CLASSES)})
+          {c: sum(label == i for _, label in train_samples) for i, c in enumerate(CLASSES)})
 
     model = LeafCNN(**{k: DEFAULT_CONFIG[k] for k in ("n_filters", "dropout")})
     print(f"parameters of the default network: "
@@ -242,7 +221,7 @@ def main() -> None:
 
     history: list[float] = []
     start = time.time()
-    default = train_and_validate(x_train, y_train, x_valid, y_valid,
+    default = train_and_validate(train_samples, valid_samples,
                                  history=history, **DEFAULT_CONFIG)
     seconds = time.time() - start
     print(f"\ndefault configuration {DEFAULT_CONFIG}")
@@ -252,7 +231,7 @@ def main() -> None:
           f"({seconds / N_EPOCHS:.1f} s per epoch)")
 
     if "--search" not in sys.argv:
-        print("\n(run with --search for both searches, about three minutes)")
+        print("\n(run with --search for both searches, several minutes on CPU)")
         return
 
     start = time.time()
@@ -263,7 +242,9 @@ def main() -> None:
     print(f"  at learning rate {10**best['params']['log_learning_rate']:.2e}, "
           f"weight decay {10**best['params']['log_weight_decay']:.2e}, "
           f"{int(round(best['params']['n_filters']))} filters, "
-          f"dropout {best['params']['dropout']:.2f}")
+          f"dropout {best['params']['dropout']:.2f}, "
+          f"rotation ±{best['params']['rotation_deg']:.1f} degrees, "
+          f"color jitter {best['params']['color_jitter']:.2f}")
 
     start = time.time()
     study = optuna_search(data)
@@ -271,7 +252,7 @@ def main() -> None:
     print(f"  best validation accuracy {study.best_value:.3f}")
     print(f"  at {study.best_params}")
 
-    on_test = train_and_validate(x_train, y_train, x_test, y_test,
+    on_test = train_and_validate(train_samples, test_samples,
                                  **study.best_params)
     print(f"\nthe winner retrained and measured ONCE on the test set: {on_test:.3f}"
           f"  (validation said {study.best_value:.3f})")
