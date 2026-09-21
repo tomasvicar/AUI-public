@@ -3,7 +3,7 @@
 The task: four species of leaf (apple, cherry, chestnut, maple) from a
 photograph, 700 training images of 96 x 96 pixels. The dataset is the one from
 the MLR course (`MLR-public/exercises/data/ex08_leaves_images.zip`); it is
-downloaded once and cached.
+vendored unchanged in this lab's data directory.
 
 Everything here is written so that **one training is cheap**: the images are
 resized to 48 x 48 and held in memory as one tensor, the network has three
@@ -34,9 +34,9 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
-DATA_URL = ("https://raw.githubusercontent.com/tomasvicar/MLR-public/master/"
-            "exercises/data/ex08_leaves_images.zip")
-DATA_ROOT = Path("labs/hyperparameters/data")   # cache, not in version control
+DATA_URL = "https://raw.githubusercontent.com/tomasvicar/AUI-public/master/labs/hyperparameters/data/ex08_leaves_images.zip"
+DATA_ROOT = Path(__file__).resolve().parents[1] / "data"
+DATA_ARCHIVE = DATA_ROOT / "ex08_leaves_images.zip"
 
 IMAGE_SIZE = 48          # the photographs are 96 x 96; smaller = faster training
 CLASSES = ["apple", "cherry", "chestnut", "maple"]
@@ -52,7 +52,10 @@ def download_leaves(root: Path = DATA_ROOT) -> Path:
     leaves = root / "leaves"
     if not leaves.exists():
         archive = root / "ex08_leaves_images.zip"
-        urllib.request.urlretrieve(DATA_URL, archive)
+        if DATA_ARCHIVE.is_file():
+            archive = DATA_ARCHIVE
+        elif not archive.is_file():
+            urllib.request.urlretrieve(DATA_URL, archive)
         with zipfile.ZipFile(archive) as zf:
             zf.extractall(root)
     return leaves
