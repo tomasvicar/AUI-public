@@ -9,6 +9,6 @@ This repository holds the slides and the lab pages (`docs/`), the student
 notebooks (`labs/<slug>/notebooks/`, opened in Google Colab from the lab
 page), the code the slides link to and the podcast episodes of the weekly
 podcast pages (`docs/podcasts/`). Materials are added as the semester
-progresses. Published so far: lectures *Bayesian optimization*, *Hyperparameters and their optimization*, *Explainability and interpretability of models*, *Bias and fairness*, *Robustness, generalization and reliability*; labs *Bayesian optimization - lab*, *Hyperparameters and their optimization - lab*, *Explainability and interpretability of models - lab*, *Bias and fairness - lab*, *Robustness, generalization and reliability - lab*.
+progresses. Published so far: lectures *Bayesian optimization*, *Hyperparameters and their optimization*, *Explainability and interpretability of models*, *Bias and fairness*, *Robustness, generalization and reliability*, *Vibe coding — an agent in the terminal*; labs *Bayesian optimization - lab*, *Hyperparameters and their optimization - lab*, *Explainability and interpretability of models - lab*, *Bias and fairness - lab*, *Robustness, generalization and reliability - lab*, *Vibe coding - lab*.
 
 Found a mistake? Open an issue.
