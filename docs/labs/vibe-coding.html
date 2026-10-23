@@ -2202,7 +2202,7 @@ vertical-align: -.125em;
 
 </head>
 
-<body class="quarto-light">
+<body class="student-only quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
 <div id="quarto-sidebar-toc-left" class="sidebar toc-left">
@@ -2275,6 +2275,7 @@ pre.sourceCode.default { border-left: 4px solid #007f86; }
 <div class="callout-body-container callout-body">
 <p><a href="https://tomasvicar.github.io/AUI-public/lectures/vibe-coding.html"><strong>Open the presentation: Vibe coding — an agent in the terminal →</strong></a></p>
 <p>We go through it <strong>at the start of the lab</strong>. It introduces the practical workflow you will use in the tasks below.</p>
+<p><strong>Listen and revisit:</strong> <a href="https://tomasvicar.github.io/AUI-public/podcasts/week-6.html">Podcast in Czech and English — week 6</a>. The podcast covers the introduction and the lab; it replaces neither the class nor your own practical work. For commentary while viewing the slides, open the <a href="https://tomasvicar.github.io/AUI-public/lectures/vibe-coding-narrated-en.html">English narrated presentation</a> or the <a href="https://tomasvicar.github.io/AUI-public/lectures/vibe-coding-narrated-cs.html">Czech narrated presentation</a>.</p>
 </div>
 </div>
 <div class="insight-box">
@@ -2915,7 +2916,7 @@ pre.sourceCode.default { border-left: 4px solid #007f86; }
 <div class="callout-body-container callout-body">
 <p><strong>Goal:</strong> a transcript and a video with correctly timed subtitles burned in. <em>A large install (ffmpeg and a speech model of several hundred MB).</em></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>In subtitles/, transcribe flu.webm with faster-whisper and use ffmpeg to make a copy of the video with burned-in subtitles.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Test data: <a href="https://raw.githubusercontent.com/tomasvicar/AUI/master/labs/vibe-coding/data/flu.webm">flu.webm</a> (75 s, 7 MB: a CDC interview on the warning signs of seasonal flu, public domain) - download it into <code>subtitles/</code> - or half a minute of your own video.</p>
+<p>Test data: <a href="https://raw.githubusercontent.com/tomasvicar/AUI-public/master/labs/vibe-coding/data/flu.webm">flu.webm</a> (75 s, 7 MB: a CDC interview on the warning signs of seasonal flu, public domain) - download it into <code>subtitles/</code> - or half a minute of your own video.</p>
 <p><strong>Check:</strong> play the video and listen: do the subtitles say what is spoken, at the right moment? Read the <code>.srt</code> and look for misheard medical words.</p>
 <p><strong>Change:</strong> <em>“Cut the first five seconds and make the subtitles larger.”</em></p>
 <p><strong>Done when:</strong> the transcript, the <code>.srt</code> and the script are committed (the video too, if under 20 MB) and the subtitles match the speech.</p>
@@ -4621,6 +4622,8 @@ var OE=function(e,t,i,n){for(var r,s=arguments.length,a=s<3?t:null===n?n=Object.
      is remembered in localStorage; `?teacher=1` in the URL switches it on. -->
 <script>
 (function () {
+  // Some lab pages are student-only; keep their teacher notes in the source.
+  if (document.body.classList.contains("student-only")) return;
   var KEY = "aui-labs-teacher";
   var bar = document.createElement("div");
   bar.className = "teacher-toggle";
