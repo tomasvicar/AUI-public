@@ -2207,63 +2207,11 @@ vertical-align: -.125em;
 </header>
 
 
-<!-- Entry landing page for students, in the format of the hyperparameters
-     lab: what the lab is about, one paragraph per part, one Colab card per
-     notebook. The timeline and the notes are `.teacher-only` - hidden until
-     the "Show for the teacher" checkbox under the title is ticked
-     (labs/teacher-toggle.html). Every number on the page comes from
-     lectures/robustness/code/pneumonia.py and heart.py. -->
+
 <div class="insight-box">
 <p><strong>Lecture:</strong> <a href="https://github.com/tomasvicar/AUI-public/tree/master/lectures/robustness">Robustness, generalization and reliability</a> (slides and code on GitHub)<br> <strong>Length:</strong> three parts, about four hours; not graded<br> <strong>Bring:</strong> a laptop with a browser and a Google account. Everything runs in <a href="https://colab.research.google.com/">Google Colab</a>, nothing is installed. Part 1 trains a network twice - it works on the free CPU in a few minutes each time, and in seconds with <em>Runtime - Change runtime type - T4 GPU</em>.</p>
 </div>
-<section id="timeline" class="level2 unlisted teacher-only">
-<h2 class="unlisted anchored" data-anchor-id="timeline">Timeline</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 7%">
-<col style="width: 13%">
-<col style="width: 56%">
-<col style="width: 24%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;">min</th>
-<th>block</th>
-<th>what happens</th>
-<th>material</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td>reset</td>
-<td>on the board: a test accuracy is a promise about one data set; today we break it three ways</td>
-<td>-</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">90</td>
-<td>part 1</td>
-<td>start the training first; the corruption function and the accuracy table while it runs; the bet on which corruption hurts most; the jitter (hole 3) and the second training; does the confidence notice the darker X-rays?</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/robustness/notebooks/ex5_corruption.ipynb" style="white-space:nowrap"><code>ex5_corruption.ipynb</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">120</td>
-<td>part 2</td>
-<td>ECE and Brier by hand, the temperature on the calibration part, the twenty splits; the three other hospitals, the intercept, a hospital left out</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/robustness/notebooks/ex5_calibration.ipynb" style="white-space:nowrap"><code>ex5_calibration.ipynb</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">70</td>
-<td>part 3</td>
-<td>PSI by hand, the weekly dashboard, in which week would you call somebody; a new hospital and the empty fields</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/robustness/notebooks/ex5_monitoring.ipynb" style="white-space:nowrap"><code>ex5_monitoring.ipynb</code></a></td>
-</tr>
-</tbody>
-</table>
-<p>The scope is that of the <code>MPA-PRM</code> lab (decision of the author, 24 September 2026), extended on 12 October 2026 to follow the second round of the lecture; the timing is adjusted in class. The teacher notebooks (<code>ex5_*-teacher.ipynb</code>) hold the solutions and the reference numbers; the lab <code>README.md</code> lists what changed against <code>MPA-PRM</code> and why.</p>
-<p><strong>Reference numbers.</strong> Part 1: clean accuracy 0.885 on the 200 X-rays; noise falls slowly to 0.720 at severity 5, brightness and contrast reach the majority class 0.660 at severity 4 (0.665 and 0.675 at 3), blur at 5. With the jitter: 0.875 at 35 % darker, 0.895 at 32 % contrast, but 0.790 clean; on all 624 clean X-rays accuracy 0.856 -&gt; 0.776 with the AUC unchanged (0.971 / 0.973). The confidence flag catches 38 % of the errors on clean X-rays and 8 % on darker ones. Part 2: T = 1.80, ECE 0.080 -&gt; 0.077, Brier 0.127 -&gt; 0.121 on the seed-42 split; over twenty splits ECE improves in 18, Brier in 19. Other hospitals: accuracy 0.70 (Hungary), 0.32 (Switzerland), 0.38 (VA); the intercept takes the Swiss ECE from 0.55 to 0.05. Random split 0.87 / 0.80 (AUC / accuracy), a hospital left out 0.76 / 0.69 on average. Part 3: weeks 1-5 quiet, PSI “watch” in week 7, “alert” in week 8, K-S significant from week 8, accuracy between 0.70 and 0.90 with no trend. The new hospital: empty fields in week 6, PSI “watch” in week 7, K-S from week 9, accuracy down to 0.38-0.50.</p>
-<p><strong>If time runs short</strong>, the twenty-split loop and hole 6 of part 2 and question 4 of part 3 can be left for home; do not skip the bet in part 1.</p>
-</section>
+
 <section id="what-this-lab-is-about" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-lab-is-about">What this lab is about</h2>
 <p>The lecture asked what happens to a model when the data change. Today you make it happen, on the two models you already know: the PneumoniaMNIST ResNet18 and the Heart Disease XGBoost. Each part is one notebook, each notebook trains its own model with the recipe of the earlier labs, and the code you get ready-made is the code that computed the numbers on the slides.</p>
@@ -2347,34 +2295,9 @@ vertical-align: -.125em;
 </section>
 
 </main>
-<!-- /main column -->
-<!-- Injected into every lab landing page by labs/_quarto.yml
-     (include-after-body). Adds the "Show for the teacher" checkbox under the
-     title; ticking it puts the class `teacher-mode` on <body>, which is what
-     makes every `.teacher-only` block visible (labs/styles.scss). The choice
-     is remembered in localStorage; `?teacher=1` in the URL switches it on. -->
-<script>
-(function () {
-  var KEY = "aui-labs-teacher";
-  var bar = document.createElement("div");
-  bar.className = "teacher-toggle";
-  bar.innerHTML = '<label><input type="checkbox"> Show for the teacher</label>';
-  var box = bar.querySelector("input");
-  function apply(on) {
-    document.body.classList.toggle("teacher-mode", on);
-    box.checked = on;
-    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
-  }
-  box.addEventListener("change", function () { apply(box.checked); });
-  var header = document.getElementById("title-block-header");
-  if (header) header.parentNode.insertBefore(bar, header.nextSibling);
-  else document.body.insertBefore(bar, document.body.firstChild);
-  var on = false;
-  try { on = localStorage.getItem(KEY) === "1"; } catch (e) {}
-  if (new URLSearchParams(location.search).get("teacher") === "1") on = true;
-  apply(on);
-})();
-</script>
+
+
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -2780,7 +2703,7 @@ vertical-align: -.125em;
     }
   });
   </script>
-</div> <!-- /content -->
+</div> 
 
 
 

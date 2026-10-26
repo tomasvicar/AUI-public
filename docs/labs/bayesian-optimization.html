@@ -2345,76 +2345,11 @@ window.Quarto = {
 </header>
 
 
-<!-- Entry landing page for students. Decision of the author (9 September
-     2026): the page has the click game "you are the acquisition function"
-     and the two notebook blocks, nothing else - the assignment, the board,
-     the prediction sheet and the takeaways that were hidden here since
-     7 September were deleted (they are in the git history and summarized in
-     README.md). The timeline and the notes are `.teacher-only`: hidden until
-     the "Show for the teacher" checkbox under the title is ticked
-     (labs/teacher-toggle.html). Every number on the page comes from the
-     scripts in code/. -->
+
 <div class="insight-box">
 <p><strong>Lecture:</strong> <a href="https://github.com/tomasvicar/AUI-public/tree/master/lectures/bayesian-optimization">Bayesian optimization</a> (slides and code on GitHub)<br> <strong>Length:</strong> 100 minutes, no break<br> <strong>Bring:</strong> a laptop with a browser and a Google account, plus a pen. Everything runs in the browser and in <a href="https://colab.research.google.com/">Google Colab</a> - nothing is installed.</p>
 </div>
-<section id="timeline" class="level2 unlisted teacher-only">
-<h2 class="unlisted anchored" data-anchor-id="timeline">Timeline</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 7%">
-<col style="width: 17%">
-<col style="width: 48%">
-<col style="width: 28%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;">min</th>
-<th>block</th>
-<th>what happens</th>
-<th>material</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td>reset</td>
-<td>the black box, the budget and the noise, on the board: one evaluation is a week of measurement, and the number that comes back is one patient, not the truth</td>
-<td>-</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">15</td>
-<td>game</td>
-<td><em>you are the acquisition function</em> - everybody plays the three one-parameter playgrounds (budget 6), then the two-parameter ones (budget 12) as time allows; two or three students say their rule out loud before the solution is opened</td>
-<td>below</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">35</td>
-<td>Python, no assistant</td>
-<td>both acquisitions, <code>suggest()</code>, the random baseline</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bayesian-optimization/notebooks/ex1_bo.ipynb" style="white-space:nowrap"><code>ex1_bo.ipynb</code></a> part 1, below</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20</td>
-<td>Python, with an assistant</td>
-<td>the same code pointed at a classifier: three constants, twenty trainings, one look at the test set</td>
-<td><code>ex1_bo.ipynb</code> part 2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20</td>
-<td>red flag</td>
-<td>a colleague’s report on tuning an SVM on real data, and one question</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bayesian-optimization/notebooks/ex1_redflag.ipynb" style="white-space:nowrap"><code>ex1_redflag.ipynb</code></a>, below</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">5</td>
-<td>defence</td>
-<td>two or three students defend one decision out loud</td>
-<td>-</td>
-</tr>
-</tbody>
-</table>
-<p><strong>The six playgrounds.</strong> One parameter (the dose, the interval fixed at 21 days, budget 6): 1D-1 is the lecture’s patient at 21 days, one hill with 42.13 at 60 mg/m²; 1D-2 has three bumps of nearly the same height (37.0 at 82, 36.0 at 55, 31.2 at 30) whose differences are about the size of the noise, so one measurement per bump cannot rank them and a lucky draw on a lower bump wins; 1D-3 is a plateau and a cliff - flat within the noise from about 60 to 80 mg/m², then a toxicity cliff, the best dose 36.8 at 73, so the honest answer is “anywhere on the plateau, and not one step further”. Two parameters (budget 12): 2D-1 is the lecture’s patient simulator - one hill, 42.13 points at (60 mg/m², 21 days); the three starting points and their measured values are the first three of the seed-0 starting points of <code>ex1_bo.ipynb</code>. 2D-2 is a trap: a broad low hill in the upper left (about 28 points) and a narrow high peak in the lower right (37.8 at (84, 14)) that none of the starting points sees - whoever climbs the first hill and never leaves it finishes ten points short. 2D-3 is a diagonal ridge: the score depends on the intensity d/T, so changing one parameter at a time walks straight off it; the best point is 45.0 at (72, 24). <em>Solve it with Bayesian optimization</em> runs the <code>mini_bo</code> loop (Gaussian process, UCB with kappa 2, the length scales of <code>mini_bo</code> in 2D - 0.38 of each side of the box - and 0.15 in 1D) from the same three points with the same budget, one measurement per step; in 1D it animates the model’s band of plus and minus two standard deviations and shows that the next point is always the top of the band - the picture to come back to when UCB is written in the notebook - and in 2D only the points appear, with a ring on the next one. Note that on 2D-2 the machine falls into the trap as often as the students do - the fixed length scales smooth the narrow peak away - which is exactly why hole 4 of <code>ex1_bo.ipynb</code> makes the students set the kernel for the problem at hand, and worth saying out loud. The numbers come from <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/code/playgrounds.py"><code>code/playgrounds.py</code></a>, which also checks the JavaScript against Python (<code>--check</code>). What to draw out of the students: where the numbers were high versus where nothing was measured yet, how a single noisy measurement misled them, and whether the recommendation should be the best measured point or a point between good ones - that is the model, the acquisition and the argmax, before anybody has written a line.</p>
-</section>
+
 <section id="what-this-lab-is-about" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-lab-is-about">What this lab is about</h2>
 <p>The lecture ended with an algorithm on one slide: a model, an acquisition and an argmax. Before you write any of it, you play the acquisition function yourself. An expensive black box takes a dose and an interval and returns one noisy score; you have a small budget of measurements and one question - where do you measure next, and <strong>why</strong>?</p>
@@ -3261,40 +3196,13 @@ window.Quarto = {
 <div class="warning-box">
 <p>Colab opens the notebooks from GitHub read-only; use <strong>File → Save a copy in Drive</strong> if you want to keep your work. The notebooks are generated from <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/code/build_notebooks.py"><code>code/build_notebooks.py</code></a>, and every number they quote is computed by a script in <a href="https://github.com/tomasvicar/AUI-public/tree/master/labs/bayesian-optimization/code"><code>code/</code></a>.</p>
 </div>
-<div class="teacher-only">
-<p><strong>For the teacher.</strong> The lesson plan, the notes and the reference numbers are in <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/README.md"><code>README.md</code></a>. The material: the student notebooks <a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bayesian-optimization/notebooks/ex1_bo.ipynb"><code>ex1_bo</code></a> (parts 1 and 2) and <a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bayesian-optimization/notebooks/ex1_redflag.ipynb"><code>ex1_redflag</code></a>, their teacher variants with every hole filled in and the teaching notes <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/notebooks/ex1_bo-teacher.ipynb"><code>ex1_bo-teacher</code></a> and <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/notebooks/ex1_redflag-teacher.ipynb"><code>ex1_redflag-teacher</code></a>, and the scripts in <a href="https://github.com/tomasvicar/AUI-public/tree/master/labs/bayesian-optimization/code"><code>code/</code></a>: <a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bayesian-optimization/code/black_box.py"><code>black_box.py</code></a> (the simulator, checked against the lecture), <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/code/playgrounds.py"><code>playgrounds.py</code></a> and <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/code/acquisition_game.js"><code>acquisition_game.js</code></a> (the game above), <a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bayesian-optimization/code/mini_bo.py"><code>mini_bo.py</code></a> and the generator <a href="https://github.com/tomasvicar/AUI/blob/master/labs/bayesian-optimization/code/build_notebooks.py"><code>build_notebooks.py</code></a>.</p>
-</div>
+
 </section>
 
 </main>
-<!-- /main column -->
-<!-- Injected into every lab landing page by labs/_quarto.yml
-     (include-after-body). Adds the "Show for the teacher" checkbox under the
-     title; ticking it puts the class `teacher-mode` on <body>, which is what
-     makes every `.teacher-only` block visible (labs/styles.scss). The choice
-     is remembered in localStorage; `?teacher=1` in the URL switches it on. -->
-<script>
-(function () {
-  var KEY = "aui-labs-teacher";
-  var bar = document.createElement("div");
-  bar.className = "teacher-toggle";
-  bar.innerHTML = '<label><input type="checkbox"> Show for the teacher</label>';
-  var box = bar.querySelector("input");
-  function apply(on) {
-    document.body.classList.toggle("teacher-mode", on);
-    box.checked = on;
-    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
-  }
-  box.addEventListener("change", function () { apply(box.checked); });
-  var header = document.getElementById("title-block-header");
-  if (header) header.parentNode.insertBefore(bar, header.nextSibling);
-  else document.body.insertBefore(bar, document.body.firstChild);
-  var on = false;
-  try { on = localStorage.getItem(KEY) === "1"; } catch (e) {}
-  if (new URLSearchParams(location.search).get("teacher") === "1") on = true;
-  apply(on);
-})();
-</script>
+
+
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -3700,7 +3608,7 @@ window.Quarto = {
     }
   });
   </script>
-</div> <!-- /content -->
+</div> 
 
 
 

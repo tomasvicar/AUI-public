@@ -2206,63 +2206,11 @@ vertical-align: -.125em;
 </header>
 
 
-<!-- Entry landing page for students, in the format of the robustness lab:
-     what the lab is about, one paragraph per part, one Colab card per
-     notebook. The timeline and the notes are `.teacher-only` - hidden until
-     the "Show for the teacher" checkbox under the title is ticked
-     (labs/teacher-toggle.html). Every number on the page comes from
-     lectures/explainability/code/heart.py and pneumonia.py. -->
+
 <div class="insight-box">
 <p><strong>Lecture:</strong> <a href="https://github.com/tomasvicar/AUI-public/tree/master/lectures/explainability">Explainability and interpretability of models</a> (slides and code on GitHub)<br> <strong>Length:</strong> two parts, about three and a half hours; not graded<br> <strong>Bring:</strong> a laptop with a browser and a Google account. Everything runs in <a href="https://colab.research.google.com/">Google Colab</a>, nothing is installed by hand. Part 2 trains a network - a few minutes on the free CPU, seconds with <em>Runtime - Change runtime type - T4 GPU</em>.</p>
 </div>
-<section id="timeline" class="level2 unlisted teacher-only">
-<h2 class="unlisted anchored" data-anchor-id="timeline">Timeline</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 7%">
-<col style="width: 15%">
-<col style="width: 54%">
-<col style="width: 24%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;">min</th>
-<th>block</th>
-<th>what happens</th>
-<th>material</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td>reset</td>
-<td>on the board: the physician’s “why?”, and the two kinds of answer - a model that explains itself, or a black box explained afterwards</td>
-<td>-</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">90</td>
-<td>part 1</td>
-<td>logistic regression and its coefficients, XGBoost, SHAP globally and for three patients, the comparison; the bet on the accuracy gap before XGBoost runs</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/explainability/notebooks/ex3_shap.ipynb" style="white-space:nowrap"><code>ex3_shap.ipynb</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">90</td>
-<td>part 2</td>
-<td>start the training first; Grad-CAM by hand while it runs; six test X-rays</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/explainability/notebooks/ex3_gradcam.ipynb" style="white-space:nowrap"><code>ex3_gradcam.ipynb</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">30</td>
-<td>trust exercise</td>
-<td>the randomized copy, the quiz in pairs - which map is real? - and the measured test for three methods</td>
-<td>end of <code>ex3_gradcam.ipynb</code></td>
-</tr>
-</tbody>
-</table>
-<p>The scope is that of the <code>MPA-PRM</code> lab (decision of the author, 24 September 2026); the timing is adjusted in class. The teacher notebooks (<code>ex3_*-teacher.ipynb</code>) hold the solutions and the reference numbers.</p>
-<p><strong>Reference numbers.</strong> Part 1: logistic regression accuracy 0.868 and AUC 0.931, XGBoost 0.868 and 0.919 - no gain from the black box. Part 2: test accuracy 0.861; the randomized copy 0.625; rank correlation trained vs. randomized over 20 X-rays - Grad-CAM 0.048, gradient 0.139, guided backprop 0.941.</p>
-<p><strong>If time runs short</strong>, hole 6 of part 1 (the comparison) and the measured test at the very end can be left for home; do not skip the quiz.</p>
-</section>
+
 <section id="what-this-lab-is-about" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-lab-is-about">What this lab is about</h2>
 <p>The lecture asked what a physician needs to hear when a model says “high risk”. Today you produce two kinds of answer and test one of them. Each part is one notebook, each notebook trains its own model with the recipe shared with the other labs, and the code you get ready-made is the code that computed the numbers on the slides.</p>
@@ -2329,34 +2277,9 @@ vertical-align: -.125em;
 </section>
 
 </main>
-<!-- /main column -->
-<!-- Injected into every lab landing page by labs/_quarto.yml
-     (include-after-body). Adds the "Show for the teacher" checkbox under the
-     title; ticking it puts the class `teacher-mode` on <body>, which is what
-     makes every `.teacher-only` block visible (labs/styles.scss). The choice
-     is remembered in localStorage; `?teacher=1` in the URL switches it on. -->
-<script>
-(function () {
-  var KEY = "aui-labs-teacher";
-  var bar = document.createElement("div");
-  bar.className = "teacher-toggle";
-  bar.innerHTML = '<label><input type="checkbox"> Show for the teacher</label>';
-  var box = bar.querySelector("input");
-  function apply(on) {
-    document.body.classList.toggle("teacher-mode", on);
-    box.checked = on;
-    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
-  }
-  box.addEventListener("change", function () { apply(box.checked); });
-  var header = document.getElementById("title-block-header");
-  if (header) header.parentNode.insertBefore(bar, header.nextSibling);
-  else document.body.insertBefore(bar, document.body.firstChild);
-  var on = false;
-  try { on = localStorage.getItem(KEY) === "1"; } catch (e) {}
-  if (new URLSearchParams(location.search).get("teacher") === "1") on = true;
-  apply(on);
-})();
-</script>
+
+
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -2762,7 +2685,7 @@ vertical-align: -.125em;
     }
   });
   </script>
-</div> <!-- /content -->
+</div> 
 
 
 

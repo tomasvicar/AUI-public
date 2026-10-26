@@ -2206,56 +2206,11 @@ vertical-align: -.125em;
 </header>
 
 
-<!-- Entry landing page for students, in the format of the robustness and
-     explainability labs. The timeline and the notes are `.teacher-only` -
-     hidden until the "Show for the teacher" checkbox under the title is
-     ticked (labs/teacher-toggle.html). Every number on the page comes from
-     lectures/bias-fairness/code/heart.py. -->
+
 <div class="insight-box">
 <p><strong>Lecture:</strong> <a href="https://github.com/tomasvicar/AUI-public/tree/master/lectures/bias-fairness">Bias and fairness</a> (slides and code on GitHub)<br> <strong>Length:</strong> two parts, close to three hours; not graded<br> <strong>Bring:</strong> a laptop with a browser and a Google account. Everything runs in <a href="https://colab.research.google.com/">Google Colab</a>; <code>fairlearn</code> installs itself from the first cell.</p>
 </div>
-<section id="timeline" class="level2 unlisted teacher-only">
-<h2 class="unlisted anchored" data-anchor-id="timeline">Timeline</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 7%">
-<col style="width: 13%">
-<col style="width: 56%">
-<col style="width: 24%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;">min</th>
-<th>block</th>
-<th>what happens</th>
-<th>material</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td>reset</td>
-<td>on the board: four definitions of “fair”, and the two prevalences of the data - 26 % of women and 55 % of men are sick</td>
-<td>-</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">100</td>
-<td>part 1</td>
-<td>the metrics by hand on the explainability model, one number per definition, their intervals, twenty splits: which gap survives? Then the model without <code>sex</code></td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bias-fairness/notebooks/ex4_audit.ipynb" style="white-space:nowrap"><code>ex4_audit.ipynb</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">70</td>
-<td>part 2</td>
-<td>ThresholdOptimizer with equalized odds and with demographic parity on a calibration split; who paid for the parity - on one draw and on two hundred?</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/bias-fairness/notebooks/ex4_mitigation.ipynb" style="white-space:nowrap"><code>ex4_mitigation.ipynb</code></a></td>
-</tr>
-</tbody>
-</table>
-<p>The scope is that of the <code>MPA-PRM</code> lab without the ethics role-play (decisions of the author, 24 September 2026); the timing is adjusted in class.</p>
-<p><strong>Reference numbers.</strong> Part 1, the explainability split: TPR 0.889 women / 0.885 men (8/9 and 23/26, 95 % intervals 0.56-0.98 and 0.71-0.96), FPR 0.059 / 0.208, selection rate 0.346 / 0.560; over twenty splits the median TPR is 0.613 / 0.789 and men’s FPR is higher in 19 of 20. Without <code>sex</code> the median gaps shrink (TPR 0.143 → 0.075, FPR 0.157 → 0.076) and stay; the other features predict sex with AUC 0.72. Part 2 (test part, 7 sick women): unmitigated TPR 0.714 / 0.893, accuracy 0.842; on draw 42 equalized odds 0.714 / 0.679, accuracy 0.789, and demographic parity 0.714 / 0.643, accuracy 0.816; averaged over 200 draws equalized odds 0.610 / 0.731, accuracy 0.822, and demographic parity 0.591 / 0.643, accuracy 0.820.</p>
-<p><strong>If time runs short</strong>, question 3 of part 2 (fitting on the test part) can be left for home; do not skip the twenty splits of part 1 or the two hundred draws of part 2.</p>
-</section>
+
 <section id="what-this-lab-is-about" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-lab-is-about">What this lab is about</h2>
 <p>The lecture asked whether a model treats every group of patients the same way - and showed that the answer depends on the definition. Today you audit the Heart Disease model of the explainability lab by sex and then try to fix what you find. Each part is one notebook; the code you get ready-made is the code that computed the numbers on the slides.</p>
@@ -2319,34 +2274,9 @@ vertical-align: -.125em;
 </section>
 
 </main>
-<!-- /main column -->
-<!-- Injected into every lab landing page by labs/_quarto.yml
-     (include-after-body). Adds the "Show for the teacher" checkbox under the
-     title; ticking it puts the class `teacher-mode` on <body>, which is what
-     makes every `.teacher-only` block visible (labs/styles.scss). The choice
-     is remembered in localStorage; `?teacher=1` in the URL switches it on. -->
-<script>
-(function () {
-  var KEY = "aui-labs-teacher";
-  var bar = document.createElement("div");
-  bar.className = "teacher-toggle";
-  bar.innerHTML = '<label><input type="checkbox"> Show for the teacher</label>';
-  var box = bar.querySelector("input");
-  function apply(on) {
-    document.body.classList.toggle("teacher-mode", on);
-    box.checked = on;
-    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
-  }
-  box.addEventListener("change", function () { apply(box.checked); });
-  var header = document.getElementById("title-block-header");
-  if (header) header.parentNode.insertBefore(bar, header.nextSibling);
-  else document.body.insertBefore(bar, document.body.firstChild);
-  var on = false;
-  try { on = localStorage.getItem(KEY) === "1"; } catch (e) {}
-  if (new URLSearchParams(location.search).get("teacher") === "1") on = true;
-  apply(on);
-})();
-</script>
+
+
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -2752,7 +2682,7 @@ vertical-align: -.125em;
     }
   });
   </script>
-</div> <!-- /content -->
+</div> 
 
 
 

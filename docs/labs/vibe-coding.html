@@ -2246,14 +2246,7 @@ vertical-align: -.125em;
 </header>
 
 
-<!-- Student landing page of the vibe-coding lab (rework of 22 October 2026,
-     labs/vibe-coding/plan-and-questions.md, answers R1-R7): introduction,
-     installation in three OS tabs, a private repository, two of seven
-     varied tasks, a documented-only gallery of three workshop demos (hidden
-     with `--profile class`), the BloodMNIST + Optuna task without a spec,
-     the hand-in. The page must stand on its own for a student at home. No
-     time budget on the page; the teacher's timeline is in README.md.
-     Teacher material is in `.teacher-only` blocks. -->
+
 <style>
 
 pre.default, pre.default code { white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -2986,57 +2979,7 @@ pre.sourceCode.default { border-left: 4px solid #007f86; }
 </table>
 </section>
 </section>
-<section id="the-two-tasks---what-to-look-for" class="level2 unlisted teacher-only">
-<h2 class="unlisted anchored" data-anchor-id="the-two-tasks---what-to-look-for">The two tasks - what to look for</h2>
-<p>The Excel data come from <a href="https://github.com/tomasvicar/AUI/blob/master/labs/vibe-coding/code/make_tables.py"><code>code/make_tables.py</code></a> (seed 2026; <code>uv run --with openpyxl python labs/vibe-coding/code/make_tables.py</code>), which writes every number below into <a href="https://github.com/tomasvicar/AUI/blob/master/labs/vibe-coding/data/tables-reference.json"><code>data/tables-reference.json</code></a>.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>what</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>registry / laboratory rows</td>
-<td>150 patients / 885 rows (884 after the duplicate)</td>
-</tr>
-<tr class="even">
-<td>patients with at least one measurement</td>
-<td><strong>138</strong>; <strong>12</strong> without any</td>
-</tr>
-<tr class="odd">
-<td>a plain join on <code>patient</code></td>
-<td>only <strong>118</strong> patients - the laboratory writes 15 patients’ ids in lower case (<code>p017</code>) and 5 with a trailing space (<code>P045</code>)</td>
-</tr>
-<tr class="even">
-<td>a measurement exported twice</td>
-<td><code>sample_id</code> S10733</td>
-</tr>
-<tr class="odd">
-<td>laboratory rows with an id not in the registry</td>
-<td>4 (P151, P163, P177, P190)</td>
-</tr>
-<tr class="even">
-<td>glucose in mg/dL (older analyser)</td>
-<td>18 rows; 1 mmol/L = 18.016 mg/dL</td>
-</tr>
-<tr class="odd">
-<td>mean glucose over all measurements of registry patients</td>
-<td>7.48 mmol/L (13.38 if the units are ignored)</td>
-</tr>
-<tr class="even">
-<td>example P017</td>
-<td>6 measurements, latest HbA1c 7.7 %, mean glucose 9.57 mmol/L</td>
-</tr>
-</tbody>
-</table>
-<p>A good <code>excel/README.md</code> names all five problems (id case, trailing spaces, the duplicate, unknown ids, the units) and the 12 patients without measurements; 118 instead of 138, or a mean glucose above 10, gives away an unhandled merge. The other tasks are checked from their files (the twist in <code>snake/README.md</code>, the diameter in <code>model3d/README.md</code>, the outputs in the other folders) and from a <code>PLAN.md</code> entry saying what the student checked.</p>
-</section>
+
 <section id="part-4---what-else-an-agent-can-build" class="level2">
 <h2 class="anchored" data-anchor-id="part-4---what-else-an-agent-can-build">Part 4 - what else an agent can build</h2>
 <p>Examples the author had an agent build, <strong>to read, not to try</strong>: what was asked, what came out, what a person must still check. In class the teacher shows them live.</p>
@@ -4522,66 +4465,7 @@ var OE=function(e,t,i,n){for(var r,s=arguments.length,a=s<3?t:null===n?n=Object.
 <p>Then a <strong>fresh reviewer</strong>: <code>/clear</code> and <em>“Start a subagent that reviews bloodmnist/ against REQUIREMENTS.md. It should find problems, not praise.”</em> (If the agent refuses to start one, ask the same in a new session.) Fix what it finds and note it in <code>REVIEW.md</code>.</p>
 </section>
 </section>
-<div class="teacher-only">
-<section id="main-task---reference-solution-and-numbers" class="level2 unlisted">
-<h2 class="unlisted anchored" data-anchor-id="main-task---reference-solution-and-numbers">Main task - reference solution and numbers</h2>
-<p>The reference solution is <a href="https://github.com/tomasvicar/AUI/tree/master/labs/vibe-coding/code/reference"><code>code/reference/</code></a> (<code>download_data.py</code>, <code>train.py</code>, <code>tune.py</code>, <code>evaluate.py</code>, <code>report.py</code>, <code>pyproject.toml</code>, <code>README.md</code>, and <code>results/</code> with <code>trials.csv</code>, <code>results.csv</code>, <code>test_metrics.json</code>, <code>runtime.json</code>, the figures and <code>report.html</code>). It runs single-process on the CPU with four threads to imitate a laptop and records its wall-clock time. It is linked only from the teacher blocks and the lab README, so it stays private.</p>
-<p>Numbers (<code>brief.md</code>, <em>Frozen numbers</em>; source: <code>code/reference/results/</code>): single process, 4 CPU threads, Intel Core i7-14700KF (a laptop core is 1.5-2x slower), torch 2.14.1+cpu, optuna 5.0.0.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>what</th>
-<th>reference value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>model and search space</td>
-<td><code>SmallCNN</code> (3x3 convolutions, batch norm, global average pooling); lr log-uniform [1e-4, 3e-2], channels 8-24, optimizer adam / sgd, dropout 0-0.5; TPE seed 0, median pruner; 8 trials x 8 epochs, batch 128</td>
-</tr>
-<tr class="even">
-<td>full study, wall clock (4 CPU threads)</td>
-<td><strong>122.9 s</strong> (2.05 min); 3 trials completed, 5 pruned; 19-30 s per full trial; about 4 min without pruning, so 6-8 min on a laptop</td>
-</tr>
-<tr class="odd">
-<td>smoke test (2 trials, 1 epoch), wall clock</td>
-<td>6.2 s and 6.1 s; <code>trials.csv</code> byte-identical between the two runs</td>
-</tr>
-<tr class="even">
-<td>best trial</td>
-<td>6: lr 6.036e-4, 20 channels, adam, dropout 0.0; 99 108 parameters</td>
-</tr>
-<tr class="odd">
-<td>best validation accuracy</td>
-<td><strong>0.9311</strong> (the completed trials: 0.8925, 0.8803, 0.9311); retrained in <code>evaluate.py</code>: 0.9311, identical</td>
-</tr>
-<tr class="even">
-<td>test accuracy / balanced accuracy of the chosen configuration</td>
-<td><strong>0.9266 / 0.9111</strong> (3 421 images, once); weakest recall basophil 0.70, monocyte 0.82</td>
-</tr>
-</tbody>
-</table>
-<p>Do not promise a student these numbers: a CNN on a CPU is not bit-reproducible across thread counts, so the same seeds land near, not on, the reference. What must agree is the student’s own smoke-test rerun (requirement 4). A reduced budget is accepted when <code>PLAN.md</code> records it and the report states it (author, 21 October 2026).</p>
-</section>
-<section id="how-to-check-a-hand-in" class="level2 unlisted">
-<h2 class="unlisted anchored" data-anchor-id="how-to-check-a-hand-in">How to check a hand-in</h2>
-<p>In this order; stop at the first thing missing:</p>
-<ol type="1">
-<li><strong>The repository:</strong> private, <code>MLRteacher</code> invited, last push before Friday 30 October 2026, 23:59; <code>AGENTS.md</code>, <code>PLAN.md</code>, two task folders (see <em>The two tasks - what to look for</em>), <code>bloodmnist/</code>.</li>
-<li><strong><code>bloodmnist/REVIEW.md</code> before the code.</strong> Three checks, each with a command and its output or a file and line. A student writes “I ran the smoke test twice, <code>fc</code> said no differences”; an agent writes a table of checkmarks.</li>
-<li><strong>The test split:</strong> <code>grep -n test bloodmnist/*.py</code> - only in <code>evaluate.py</code>; standardization from the training split.</li>
-<li><strong>The search:</strong> the space in <code>tune.py</code> matches the report; at least three hyperparameters, one integer or categorical; a pruner; a seed; <code>trials.csv</code> has the trials <code>PLAN.md</code> claims.</li>
-<li><strong>Two numbers:</strong> best validation accuracy (<code>trials.csv</code>) and test accuracy (<code>test_metrics.json</code>) equal the report.</li>
-<li><strong>The cautious sentence</strong> in the report.</li>
-<li><strong>If time allows:</strong> a fresh clone, <code>uv sync</code>, the smoke test from <code>bloodmnist/README.md</code>.</li>
-</ol>
-<p>The reference writes more than required (<code>train.py</code>, <code>results.csv</code>, <code>runtime.json</code>, <code>RUNS.md</code>); a hand-in need not.</p>
-</section>
-</div>
+
 <section id="part-6---hand-in" class="level2">
 <h2 class="anchored" data-anchor-id="part-6---hand-in">Part 6 - hand in</h2>
 <div class="hand-in">
@@ -4608,42 +4492,13 @@ var OE=function(e,t,i,n){for(var r,s=arguments.length,a=s<3?t:null===n?n=Object.
 <li><strong>The validation split chooses, the test split is opened once</strong> - and your review says where the code guarantees it.</li>
 </ol>
 <p><a href="https://tomasvicar.github.io/MLR-public/lectures/L5.html">MLR lecture 5</a> and <a href="https://tomasvicar.github.io/MLR-public/exercises/ex05.html">MLR lab 5</a> (the course MPA-MLR, Machine Learning and Recognition) go deeper.</p>
-<div class="teacher-only">
-<p><strong>For the teacher.</strong> The lesson plan, the timeline and the decisions are in <a href="https://github.com/tomasvicar/AUI/blob/master/labs/vibe-coding/README.md"><code>README.md</code></a>; the author’s answers in <a href="https://github.com/tomasvicar/AUI/blob/master/labs/vibe-coding/plan-and-questions.md"><code>plan-and-questions.md</code></a>, the proposals of 22 October in <a href="https://github.com/tomasvicar/AUI/blob/master/labs/vibe-coding/ideas-2026-10-22.md"><code>ideas-2026-10-22.md</code></a>. To hide part 4 in class, render with <code>uv run quarto render labs/vibe-coding/index.qmd --profile class</code>.</p>
-</div>
+
 </section>
 
 </main>
-<!-- /main column -->
-<!-- Injected into every lab landing page by labs/_quarto.yml
-     (include-after-body). Adds the "Show for the teacher" checkbox under the
-     title; ticking it puts the class `teacher-mode` on <body>, which is what
-     makes every `.teacher-only` block visible (labs/styles.scss). The choice
-     is remembered in localStorage; `?teacher=1` in the URL switches it on. -->
-<script>
-(function () {
-  // Some lab pages are student-only; keep their teacher notes in the source.
-  if (document.body.classList.contains("student-only")) return;
-  var KEY = "aui-labs-teacher";
-  var bar = document.createElement("div");
-  bar.className = "teacher-toggle";
-  bar.innerHTML = '<label><input type="checkbox"> Show for the teacher</label>';
-  var box = bar.querySelector("input");
-  function apply(on) {
-    document.body.classList.toggle("teacher-mode", on);
-    box.checked = on;
-    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
-  }
-  box.addEventListener("change", function () { apply(box.checked); });
-  var header = document.getElementById("title-block-header");
-  if (header) header.parentNode.insertBefore(bar, header.nextSibling);
-  else document.body.insertBefore(bar, document.body.firstChild);
-  var on = false;
-  try { on = localStorage.getItem(KEY) === "1"; } catch (e) {}
-  if (new URLSearchParams(location.search).get("teacher") === "1") on = true;
-  apply(on);
-})();
-</script>
+
+
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -5049,7 +4904,7 @@ var OE=function(e,t,i,n){for(var r,s=arguments.length,a=s<3?t:null===n?n=Object.
     }
   });
   </script>
-</div> <!-- /content -->
+</div> 
 
 
 

@@ -2207,69 +2207,11 @@ vertical-align: -.125em;
 </header>
 
 
-<!-- Entry landing page for students, in the format of the Bayesian
-     optimization lab: what the lab is about, one paragraph per part of the
-     notebook, one Colab card. The timeline and the notes are `.teacher-only`
-     - hidden until the "Show for the teacher" checkbox under the title is
-     ticked (labs/teacher-toggle.html). Every number on the page comes from
-     the scripts in code/. -->
+
 <div class="insight-box">
 <p><strong>Lecture:</strong> <a href="https://github.com/tomasvicar/AUI-public/tree/master/lectures/hyperparameters">Hyperparameters and their optimization</a> (slides and code on GitHub)<br> <strong>Length:</strong> 100 minutes, no break<br> <strong>Bring:</strong> a laptop with a browser and a Google account. Everything runs in <a href="https://colab.research.google.com/">Google Colab</a>; the two libraries install themselves from the first cell. The last part trains a small network - it works on the free CPU, and is noticeably faster with <em>Runtime - Change runtime type - T4 GPU</em>.</p>
 </div>
-<section id="timeline" class="level2 unlisted teacher-only">
-<h2 class="unlisted anchored" data-anchor-id="timeline">Timeline</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 7%">
-<col style="width: 13%">
-<col style="width: 56%">
-<col style="width: 24%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;">min</th>
-<th>block</th>
-<th>what happens</th>
-<th>material</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td>reset</td>
-<td>on the board: a hyperparameter is anything chosen before learning starts, and <strong>one evaluation</strong> of a configuration is whatever the objective function does - a measurement, a cross-validation, a training</td>
-<td>-</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20</td>
-<td>part 1</td>
-<td>the black box of the other lab, this time handed to <code>bayes_opt</code>: an objective, a box, a budget</td>
-<td><a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/hyperparameters/notebooks/ex2_tuning.ipynb" style="white-space:nowrap"><code>ex2_tuning.ipynb</code></a> part 1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">25</td>
-<td>part 2</td>
-<td>the same three lines on an SVM: the log scale, one evaluation = a 5-fold cross-validation, and the test part at the end</td>
-<td>part 2</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">45</td>
-<td>part 3</td>
-<td>a convolutional network: the training as a function, <code>bayes_opt</code> over it, then Optuna with a discrete parameter</td>
-<td>part 3</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td>defence</td>
-<td>two or three students say which number they would report and why</td>
-<td>-</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Reference numbers</strong> (<code>code/classic_model.py</code>, <code>code/leaf_cnn.py</code>, seed 0, two CPU threads). Part 1: the optimum is 42.13 points at (60 mg/m², 21 days); the search recommends about (67, 20), truly worth 40.41, and the best <em>measured</em> value it saw was 41.23 - with noise of 2 points the best of twenty measurements is a lottery ticket in either direction. Part 2: the default <code>C = 1, gamma = 1/30</code> gives <strong>98.12 %</strong> cross-validated accuracy, the tuned one <strong>98.59 %</strong>, random search at the same budget the same 98.59 %, and on the test part the tuned model gets <strong>95.10 %</strong> against the default’s <strong>95.80 %</strong> - tuning bought half a point that the test part does not confirm, which is the honest ending of that block and the lecture’s slide <em>When not to tune</em>. Part 3: the baseline disables augmentation. Both libraries now tune rotation angle and brightness/contrast jitter together with the CNN settings. Consult the lab README for rerun results; the earlier tensor-only pipeline’s numbers are historical. Do not promise students that twelve trials improve accuracy.</p>
-<p><strong>What to draw out of the students:</strong> in part 1 that <code>bayes_opt</code> maximizes a function of <em>named</em> arguments and needs nothing else; in part 2 why the scale of <code>C</code> is logarithmic and what one evaluation costs; in part 3 the two things a box of real numbers cannot express - an integer and a choice - and why that is the reason Optuna exists. The last question of the lesson is which of the two numbers of part 3 belongs in a paper.</p>
-<p><strong>If time runs short</strong>, the Optuna cell can be left for home; do not skip the final cell with the test half, it carries the point.</p>
-</section>
+
 <section id="what-this-lab-is-about" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-lab-is-about">What this lab is about</h2>
 <p>A hyperparameter is anything you have to choose before learning starts, and the lecture said that choosing it by hand does not scale. Today you choose with a library instead - the same three lines on three black boxes whose evaluations differ in price by six orders of magnitude:</p>
@@ -2341,40 +2283,13 @@ vertical-align: -.125em;
 <div class="warning-box">
 <p>Colab opens the notebook from GitHub read-only; use <strong>File → Save a copy in Drive</strong> if you want to keep your work. The notebook is generated from <a href="https://github.com/tomasvicar/AUI/blob/master/labs/hyperparameters/code/build_notebooks.py"><code>code/build_notebooks.py</code></a>, and every number it is compared against is computed by a script in <a href="https://github.com/tomasvicar/AUI-public/tree/master/labs/hyperparameters/code"><code>code/</code></a>.</p>
 </div>
-<div class="teacher-only">
-<p><strong>For the teacher.</strong> The lesson plan and the reference numbers are in <a href="https://github.com/tomasvicar/AUI/blob/master/labs/hyperparameters/README.md"><code>README.md</code></a>. The material: the student notebook <a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/hyperparameters/notebooks/ex2_tuning.ipynb"><code>ex2_tuning</code></a>, its teacher variant with every hole filled in and the teaching notes <a href="https://github.com/tomasvicar/AUI/blob/master/labs/hyperparameters/notebooks/ex2_tuning-teacher.ipynb"><code>ex2_tuning-teacher</code></a>, and the scripts in <a href="https://github.com/tomasvicar/AUI-public/tree/master/labs/hyperparameters/code"><code>code/</code></a>: <a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/hyperparameters/code/classic_model.py"><code>classic_model.py</code></a> (part 2), <a href="https://github.com/tomasvicar/AUI-public/blob/master/labs/hyperparameters/code/leaf_cnn.py"><code>leaf_cnn.py</code></a> (part 3, <code>--search</code> runs both searches) and the generator <a href="https://github.com/tomasvicar/AUI/blob/master/labs/hyperparameters/code/build_notebooks.py"><code>build_notebooks.py</code></a>. The black box of part 1 is the simulator of the <a href="https://github.com/tomasvicar/AUI-public/tree/master/labs/bayesian-optimization">Bayesian optimization lab</a>; the generator checks the copy against it.</p>
-</div>
+
 </section>
 
 </main>
-<!-- /main column -->
-<!-- Injected into every lab landing page by labs/_quarto.yml
-     (include-after-body). Adds the "Show for the teacher" checkbox under the
-     title; ticking it puts the class `teacher-mode` on <body>, which is what
-     makes every `.teacher-only` block visible (labs/styles.scss). The choice
-     is remembered in localStorage; `?teacher=1` in the URL switches it on. -->
-<script>
-(function () {
-  var KEY = "aui-labs-teacher";
-  var bar = document.createElement("div");
-  bar.className = "teacher-toggle";
-  bar.innerHTML = '<label><input type="checkbox"> Show for the teacher</label>';
-  var box = bar.querySelector("input");
-  function apply(on) {
-    document.body.classList.toggle("teacher-mode", on);
-    box.checked = on;
-    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
-  }
-  box.addEventListener("change", function () { apply(box.checked); });
-  var header = document.getElementById("title-block-header");
-  if (header) header.parentNode.insertBefore(bar, header.nextSibling);
-  else document.body.insertBefore(bar, document.body.firstChild);
-  var on = false;
-  try { on = localStorage.getItem(KEY) === "1"; } catch (e) {}
-  if (new URLSearchParams(location.search).get("teacher") === "1") on = true;
-  apply(on);
-})();
-</script>
+
+
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -2780,7 +2695,7 @@ vertical-align: -.125em;
     }
   });
   </script>
-</div> <!-- /content -->
+</div> 
 
 
 
