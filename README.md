@@ -1,6 +1,6 @@
 # AUI · Applied AI in Life Sciences
 
-Lectures and labs of Tomáš Vičar for the **AUI** course (Department of
+Lectures and labs of Tomáš Vičar, Jiří Chmelík and Roman Jakubíček for the **AUI** course (Department of
 Biomedical Engineering, FEEC, Brno University of Technology).
 
 **Web:** https://tomasvicar.github.io/AUI-public/
