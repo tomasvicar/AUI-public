@@ -2219,6 +2219,7 @@ vertical-align: -.125em;
   <li><a href="#part-5---the-big-task-bloodmnist-a-cnn-and-an-optuna-study" id="toc-part-5---the-big-task-bloodmnist-a-cnn-and-an-optuna-study" class="nav-link" data-scroll-target="#part-5---the-big-task-bloodmnist-a-cnn-and-an-optuna-study">Part 5 - the big task: BloodMNIST, a CNN and an Optuna study</a></li>
   <li><a href="#part-6---hand-in" id="toc-part-6---hand-in" class="nav-link" data-scroll-target="#part-6---hand-in">Part 6 - hand in</a></li>
   <li><a href="#what-you-should-take-away" id="toc-what-you-should-take-away" class="nav-link" data-scroll-target="#what-you-should-take-away">What you should take away</a></li>
+  <li><a href="#after-the-lab---back-to-a-subscription-or-uninstall" id="toc-after-the-lab---back-to-a-subscription-or-uninstall" class="nav-link" data-scroll-target="#after-the-lab---back-to-a-subscription-or-uninstall">After the lab - back to a subscription, or uninstall</a></li>
   </ul>
 </nav>
 </div>
@@ -2598,7 +2599,7 @@ pre.sourceCode.default { border-left: 4px solid #007f86; }
 </div>
 </div>
 </div>
-<p><strong>The block overwrites both files</strong> - back them up first if you already use Claude Code with another account.</p>
+<p><strong>The block overwrites both files</strong> - back them up first if you already use Claude Code with another account. To undo the setup after the lab, or to uninstall Claude Code, see <a href="#after-the-lab---back-to-a-subscription-or-uninstall">After the lab</a>.</p>
 <p>Requests now go to <code>llm.ai.e-infra.cz</code> (<a href="https://docs.cerit.io/en/docs/ai-as-a-service/llm-integration">the CERIT-SC recipe</a>) with the aliases <code>agentic</code> (default), <code>thinker</code> and <code>mini</code>. These are <strong>not Claude models</strong>, and what stands behind an alias changes without notice.</p>
 </section>
 <section id="step-4---a-folder-the-first-start-the-first-prompt" class="level3">
@@ -4492,6 +4493,68 @@ var OE=function(e,t,i,n){for(var r,s=arguments.length,a=s<3?t:null===n?n=Object.
 <li><strong>The validation split chooses, the test split is opened once</strong> - and your review says where the code guarantees it.</li>
 </ol>
 <p><a href="https://tomasvicar.github.io/MLR-public/lectures/L5.html">MLR lecture 5</a> and <a href="https://tomasvicar.github.io/MLR-public/exercises/ex05.html">MLR lab 5</a> (the course MPA-MLR, Machine Learning and Recognition) go deeper.</p>
+</section>
+<section id="after-the-lab---back-to-a-subscription-or-uninstall" class="level2">
+<h2 class="anchored" data-anchor-id="after-the-lab---back-to-a-subscription-or-uninstall">After the lab - back to a subscription, or uninstall</h2>
+<p>Step 3 pointed Claude Code at CERIT-SC through two files in your home folder. Two ways back, depending on what you want. <strong>Close every Claude Code session first</strong> (<code>/exit</code>) - Windows cannot delete a program that is running. Your project folders, their <code>AGENTS.md</code>, <code>CLAUDE.md</code> and Git history are not touched by either block.</p>
+<p><strong>A - keep Claude Code, sign in with your own account.</strong> This deletes only the two files of step 3 (the endpoint, the key, the model names and the skipped login screen); the next <code>claude</code> asks how to sign in again - a Claude subscription or an Anthropic Console API key - exactly as after a fresh installation, and the automatic updates are switched back on.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href>Windows (PowerShell)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href>macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false" href>Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Remove-Item</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.claude\settings.json&quot;</span><span class="op">,</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.claude.json&quot;</span> <span class="op">-</span>Force <span class="op">-</span>ErrorAction SilentlyContinue</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> ~/.claude/settings.json ~/.claude.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> ~/.claude/settings.json ~/.claude.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><strong>Done when:</strong> <code>claude</code> (in a project folder) shows the theme choice and then <em>Select login method</em>; <code>/status</code> no longer shows <code>llm.ai.e-infra.cz</code>.</p>
+<p><strong>B - remove Claude Code completely.</strong> This deletes the program, its downloaded versions, the settings with your key and the saved conversation histories (<code>.claude</code>).</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href>Windows (PowerShell)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href>macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false" href>Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="op">&amp;</span> <span class="op">{</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Remove-Item</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.local\bin\claude.exe&quot;</span> <span class="op">-</span>Force <span class="op">-</span>ErrorAction SilentlyContinue</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Remove-Item</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.local\share\claude&quot;</span><span class="op">,</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.local\state\claude&quot;</span><span class="op">,</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.cache\claude&quot;</span><span class="op">,</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.claude&quot;</span><span class="op">,</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.claude.json&quot;</span> <span class="op">-</span>Recurse <span class="op">-</span>Force <span class="op">-</span>ErrorAction SilentlyContinue</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="va">$claudeBin</span> <span class="op">=</span> <span class="fu">Join-Path</span> <span class="va">$env</span><span class="op">:</span><span class="va">USERPROFILE</span> <span class="st">&quot;.local\bin&quot;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(-not</span> <span class="op">(</span><span class="fu">Get-ChildItem</span> <span class="va">$claudeBin</span> <span class="op">-</span>Force <span class="op">-</span>ErrorAction SilentlyContinue<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">foreach</span> <span class="op">(</span><span class="va">$scope</span> <span class="kw">in</span> <span class="op">@(</span><span class="st">&quot;User&quot;</span><span class="op">,</span> <span class="st">&quot;Process&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">$currentPath</span> <span class="op">=</span> <span class="op">[</span><span class="dt">string</span><span class="op">][</span>Environment<span class="op">]::</span>GetEnvironmentVariable<span class="op">(</span><span class="st">&quot;Path&quot;</span><span class="op">,</span> <span class="va">$scope</span><span class="op">)</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="va">$kept</span> <span class="op">=</span> <span class="op">@(</span><span class="va">$currentPath</span> <span class="op">-split</span> <span class="st">&quot;;&quot;</span> <span class="op">|</span> <span class="fu">Where-Object</span> <span class="op">{</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>      <span class="va">$_</span><span class="op">.</span><span class="fu">Trim</span><span class="op">()</span> <span class="op">-and</span> <span class="op">[</span>Environment<span class="op">]::</span>ExpandEnvironmentVariables<span class="op">(</span><span class="va">$_</span><span class="op">.</span><span class="fu">Trim</span><span class="op">()).</span><span class="fu">TrimEnd</span><span class="op">(</span><span class="st">&quot;\&quot;</span><span class="op">)</span> <span class="op">-ne</span> <span class="va">$claudeBin</span><span class="op">.</span><span class="fu">TrimEnd</span><span class="op">(</span><span class="st">&quot;\&quot;</span><span class="op">)</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">})</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>Environment<span class="op">]::</span>SetEnvironmentVariable<span class="op">(</span><span class="st">&quot;Path&quot;</span><span class="op">,</span> <span class="op">(</span><span class="va">$kept</span> <span class="op">-join</span> <span class="st">&quot;;&quot;</span><span class="op">),</span> <span class="va">$scope</span><span class="op">)</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span><span class="fu">Test-Path</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">\.local\bin\claude.exe&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Write-Host</span> <span class="st">&quot;claude.exe is still running - close every Claude window and run the block again.&quot;</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Write-Host</span> <span class="st">&quot;Claude Code is removed.&quot;</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The block removes <code>.local\bin</code> from your <code>PATH</code> only when the folder is empty - <code>uv</code> from step 5 lives there too and keeps working.</p>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> ~/.local/bin/claude</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> ~/.local/share/claude ~/.local/state/claude ~/.cache/claude ~/.claude ~/.claude.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>PATH</code> line of step 2 stays in <code>~/.zshrc</code>: <code>uv</code> from step 5 lives in the same folder. Delete the line by hand only if nothing else is in <code>~/.local/bin</code>.</p>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> ~/.local/bin/claude</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> ~/.local/share/claude ~/.local/state/claude ~/.cache/claude ~/.claude ~/.claude.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>PATH</code> line of step 2 stays in <code>~/.bashrc</code>: <code>uv</code> from step 5 lives in the same folder. Delete the line by hand only if nothing else is in <code>~/.local/bin</code>.</p>
+</div>
+</div>
+</div>
+<p><strong>Done when:</strong> in a <strong>new</strong> terminal <code>claude --version</code> says the command is not found.</p>
+<p><strong>The key itself</strong> still works after either block - it is stored at CERIT-SC, not only on your laptop. If you no longer need it, delete it at <a href="https://chat.ai.e-infra.cz/">chat.ai.e-infra.cz</a> in <em>Settings → Account → API Keys</em>. A project folder may hold its own <code>.claude</code> folder with local permissions; delete it together with the project if you wish.</p>
 
 </section>
 
