@@ -2239,6 +2239,9 @@ table.parts details p, table.parts details ul { margin:0.3em 0 0.5em; }
 <li><strong>Show it to people:</strong> a web page served by the board itself, and a monitoring station that receives the state over Bluetooth Low Energy (BLE) and raises alarms, as a bedside monitor would.</li>
 <li><strong>Add something of your own</strong> and <strong>document</strong> it so that someone else can rebuild the device.</li>
 </ol>
+<div class="insight-box">
+<p><strong>The computation must run on the chip, without a connection to a computer.</strong> The computer is only for training the model and flashing the board. In the demonstration the sensor reading, the features and the classification all run on the ESP32-S3 itself. The USB cable stays plugged in <strong>only as the power supply</strong>: no data may travel over it, and no part of the computation may run on the computer.</p>
+</div>
 <p>One device must support <strong>all four states</strong>, with these LED colours:</p>
 <table class="caption-top table">
 <colgroup>
