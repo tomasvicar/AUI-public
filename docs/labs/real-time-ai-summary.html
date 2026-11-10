@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root { color-scheme: light; } body { margin: 0; font-size: 14px; } img { max-width: 100%; }</style>
+<title>Thirteen Breathing Monitors</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one reading column on an oscilloscope-paper ground; the signal strip opens the page and the data sits on hairline rows. */
+:root {
+  --bg: #eef3f2; --panel: #f9fbfa; --ink: #15282b; --muted: #526669; --line: #cbd8d6;
+  --accent: #0b7285; --track: #dbe6e4; --tip-bg: #15282b; --tip-ink: #f9fbfa;
+  --led-green: #1a9e3a; --led-red: #d62728; --led-blue: #1f5fd6; --led-magenta: #c51bc5;
+  --display: "Familjen Grotesk", "Segoe UI", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #101a1c; --panel: #172427; --ink: #e6efee; --muted: #9db0b2; --line: #2d3f42;
+  --accent: #4fc0d4; --track: #263639; --tip-bg: #e6efee; --tip-ink: #101a1c;
+  --led-green: #4ccc6a; --led-red: #f26a6b; --led-blue: #6f9ff2; --led-magenta: #e565e5; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #101a1c; --panel: #172427; --ink: #e6efee; --muted: #9db0b2; --line: #2d3f42;
+  --accent: #4fc0d4; --track: #263639; --tip-bg: #e6efee; --tip-ink: #101a1c;
+  --led-green: #4ccc6a; --led-red: #f26a6b; --led-blue: #6f9ff2; --led-magenta: #e565e5; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 1rem/1.6 var(--body); }
+.page { max-width: 62rem; margin: 0 auto; padding-block: 3rem 4rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 3.5rem; }
+.page > * { min-width: 0; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.5rem, 7vw, 4.4rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 1.7rem; font-weight: 700; }
+h3 { font-size: 1.1rem; font-weight: 700; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font: 500 0.8rem/1.4 var(--mono); letter-spacing: 0.04em; color: var(--muted); }
+.note { color: var(--muted); font-size: 0.875rem; }
+.stack { display: grid; gap: 1rem; align-content: start; }
+.stack > * { min-width: 0; }
+header { display: grid; gap: 1.25rem; }
+.lede { font-size: 1.15rem; }
+.scope { border-block: 1px solid var(--line); padding-block: 0.75rem; display: grid; gap: 0.5rem; }
+.scope svg { display: block; width: 100%; height: 96px; }
+.states { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; font: 400 0.8rem/1.3 var(--mono); color: var(--muted); }
+.led { display: inline-block; width: 0.7em; height: 0.7em; border-radius: 50%; margin-right: 0.4em; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1.25rem; }
+.stat b { display: block; font: 700 2.3rem/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 0.9rem; }
+.rows { display: grid; gap: 0.6rem; }
+.row { display: grid; grid-template-columns: minmax(7.5rem, 15rem) minmax(0, 1fr) 6.5rem; gap: 0.75rem; align-items: center; font-size: 0.95rem; }
+.row .label { min-width: 0; overflow-wrap: anywhere; }
+.row .val { font: 400 0.875rem/1.3 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.track { height: 10px; background: var(--track); border-radius: 4px; }
+.fill { height: 100%; background: var(--accent); border-radius: 4px; }
+.cols { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 2px; height: 11rem; align-items: end; border-bottom: 1px solid var(--line); background: linear-gradient(to top, transparent calc(50% - 1px), var(--line) calc(50% - 1px), var(--line) 50%, transparent 50%); }
+.col { position: relative; background: var(--accent); border-radius: 4px 4px 0 0; outline-offset: 2px; }
+.col::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--tip-bg); color: var(--tip-ink); font: 400 0.75rem/1.3 var(--mono); padding: 0.25rem 0.5rem; border-radius: 4px; white-space: nowrap; display: none; pointer-events: none; z-index: 2; }
+.col:hover::after, .col:focus::after { display: block; }
+.col.peak::before { content: "38"; position: absolute; bottom: calc(100% + 2px); left: 0; right: 0; text-align: center; font: 500 0.8rem/1 var(--mono); color: var(--ink); }
+.ticks { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 2px; font: 400 0.72rem/1.3 var(--mono); color: var(--muted); text-align: center; }
+.tallies { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 2rem; }
+.tallies > * { min-width: 0; }
+.tallies .row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 1.5rem; }
+.builds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2.5rem; }
+.build { border-top: 1px solid var(--line); padding-block: 1rem 1.25rem; display: grid; gap: 0.35rem; align-content: start; min-width: 0; }
+.who { font: 400 0.8rem/1.3 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.5rem 2rem; }
+.fact b { display: block; font: 700 1.7rem/1.15 var(--display); font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; background: var(--panel); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 46rem; }
+th, td { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+td.repo { font-family: var(--mono); font-size: 0.8rem; overflow-wrap: anywhere; }
+tr:last-child td { border-bottom: 0; }
+code { font: 400 0.9em var(--mono); }
+figure { margin: 0; display: grid; gap: 0.35rem; align-content: start; min-width: 0; }
+figure img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 6px; }
+figcaption { font: 400 0.75rem/1.3 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.shots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.boards { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 1rem; }
+.boards img { aspect-ratio: 3 / 4; object-fit: cover; }
+@media (max-width: 40rem) { .shots { grid-template-columns: minmax(0, 1fr); } .boards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 40rem) {
+  .builds { grid-template-columns: minmax(0, 1fr); }
+  .row { grid-template-columns: minmax(0, 1fr) 4.5rem; }
+  .row .track { grid-column: 1 / -1; grid-row: 2; }
+  .tallies .row { grid-template-columns: minmax(0, 1fr) 1.5rem; }
+  .states { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ticks span:nth-child(even) { visibility: hidden; }
+}
+</style>
+
+</head>
+<body>
+<main class="page">
+  <header>
+    <p class="eyebrow">Computer-Aided Medical Diagnostics (MPA-PRM) · Real-time AI lab · 9 November 2026</p>
+    <h1>Thirteen breathing monitors</h1>
+    <p class="lede">In four hours, every team wired a motion sensor to an ESP32-S3, recorded its own data, trained a classifier and got it running on the chip. Here is what you built, what you measured and what you tried next.</p>
+    <div class="scope">
+      <svg id="trace" viewBox="0 0 1000 96" preserveAspectRatio="none" role="img" aria-label="Schematic signal passing through calm breathing, fast breathing, not attached and shaking"></svg>
+      <div class="states">
+        <span><i class="led" style="background:var(--led-green)"></i>calm breathing</span>
+        <span><i class="led" style="background:var(--led-red)"></i>fast breathing</span>
+        <span><i class="led" style="background:var(--led-blue)"></i>not attached</span>
+        <span><i class="led" style="background:var(--led-magenta)"></i>shaking</span>
+      </div>
+      <p class="note">Schematic of the four states the devices had to tell apart, not a recording.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>28</b><span>students in 13 teams</span></div>
+      <div class="stat"><b>8.9</b><span>mean points of 10, per team</span></div>
+      <div class="stat"><b>≈180 min</b><span>of signal, three teams estimated</span></div>
+      <div class="stat"><b>≈320</b><span>recordings, three teams estimated</span></div>
+      <div class="stat"><b>227</b><span>commits</span></div>
+    </div>
+  </header>
+
+  <section class="stack">
+    <h2>What you came up with</h2>
+    <p>Nine teams showed an own extension. These eight are described in their repositories.</p>
+    <div class="builds">
+      <article class="build"><p class="who">MPA-PRM_Real-time_microcontroller</p><h3>A mouse you steer by tilting</h3><p>The board pairs with a computer as a standard Bluetooth mouse. Tilt moves the pointer, and a finger tap on the board is a left click, caught as a jump of more than 0.6 g away from the filtered signal.</p></article>
+      <article class="build"><p class="who">esp32s3-breathing-monitor</p><h3>A balloon game on the board's own page</h3><p>Shake to climb, tilt to steer between the rocks. The game skips the classifier on purpose, because its window and smoothing add 1 to 2 s of lag. It reads a raw activity signal from the last 0.2 s instead.</p></article>
+      <article class="build"><p class="who">esp32-breathing-monitor</p><h3>A sleep position monitor</h3><p>Motivated by positional sleep apnea: a low-pass filter isolates the gravity vector, and the LED shows back, stomach, left side, right side or upright.</p></article>
+      <article class="build"><p class="who">Real-time-AI-on-a-microcontroller---PRM</p><h3>A monitor that admits it is unsure</h3><p>The yellow state appears when the top probability is at most 2/3. That threshold comes from a cost argument: a wrong state counts as twice as bad as an admitted doubt, so answering pays only when p − 2(1 − p) &gt; 0.</p></article>
+      <article class="build"><p class="who">prm-realtime-ai</p><h3>Unsure, and honest about faults</h3><p>Yellow for low confidence or unknown movement, white when the sensor is disconnected or frozen, so the device stops instead of inventing a prediction.</p></article>
+      <article class="build"><p class="who">PRM_application_IV_live_cosi</p><h3>Breaths per minute</h3><p>A spectral estimate on the chip. The search band had to be widened from 1.0 to 2.5 Hz once the team saw how fast "fast breathing" really was.</p></article>
+      <article class="build"><p class="who">StisHik</p><h3>Breathing rate with a decimal</h3><p>The interpolated peak of the gyroscope spectrum is shown as a breathing rate with a decimal, and the repository has a metronome-guided recording tool to check it against.</p></article>
+      <article class="build"><p class="who">HiJack_breathing</p><h3>A 3D motion workstation</h3><p>The board's page shows a 3D model that follows the sensor's orientation, with a calibration button, gravity-compensated acceleration and a recorder built into the page.</p></article>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>Ten bedside monitors</h2>
+    <p>The monitoring stations on GitHub Pages, ten designs for the same job. They were captured with no board connected, so most are waiting for data. The first one is running its team's built-in simulator.</p>
+    <div class="shots">
+      <figure><img src="real-time-ai-summary-gallery/monitor-1.jpg" alt="Dark monitoring page showing the state not attached with class probabilities"><figcaption>MPA-PRM_Real-time_microcontroller</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-2.jpg" alt="Light monitoring page with current state, timeline and alarm limits"><figcaption>ESP32</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-3.jpg" alt="Dark patient monitoring station with alarm thresholds"><figcaption>esp32-breathing-monitor</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-6.jpg" alt="Light breathing monitor in Czech with a large state banner"><figcaption>PRM_application_IV_live_cosi</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-7.jpg" alt="Light bedside breathing monitor in Czech with alarm limits and a timeline"><figcaption>esp32s3-breathing-monitor</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-8.jpg" alt="Compact dark monitor with a connect button and a timeline"><figcaption>prm-realtime-ai</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-9.jpg" alt="Dark page with a large Ready to connect heading and alarm settings"><figcaption>HiJack_breathing</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-10.jpg" alt="Light monitoring station in Czech with alarm limits, timeline and event log"><figcaption>Real-time-AI-on-a-microcontroller---PRM</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-11.jpg" alt="Dark monitor with a breathing rate panel"><figcaption>StisHik</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/monitor-13.jpg" alt="Dark monitor with duration alarms and telemetry panels"><figcaption>PRM_project_2</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>Eleven breadboards</h2>
+    <p>The same kit, wired eleven ways. Photos from the teams' documentation, several with the LED caught mid-state.</p>
+    <div class="boards">
+      <figure><img src="real-time-ai-summary-gallery/board-1.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard"><figcaption>MPA-PRM_Real-time…</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-2.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, blue LED"><figcaption>ESP32</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-3.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, blue LED"><figcaption>esp32-breathing…</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-4.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard"><figcaption>AppII-realtime…</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-5.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, red LED"><figcaption>Seiros-RT</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-6.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, blue LED"><figcaption>PRM_application_IV…</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-7.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, blue LED"><figcaption>esp32s3-breathing…</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-9.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, green LED"><figcaption>HiJack_breathing</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-10.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, blue LED"><figcaption>Real-time-AI-on-a…</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-12.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard"><figcaption>RT-edge</figcaption></figure>
+      <figure><img src="real-time-ai-summary-gallery/board-13.jpg" alt="ESP32-S3 and MPU-6050 wired on a breadboard, blue LED"><figcaption>PRM_project_2</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>Numbers worth quoting</h2>
+    <div class="facts">
+      <div class="fact"><b>132 /min</b><p>The fastest hand-counted breathing: 88 breaths in 40 s. It broke one team's first frequency estimator.</p></div>
+      <div class="fact"><b>2.4 ms</b><p>Fastest reported computation of features and prediction on the chip, against a 500 ms update budget.</p></div>
+      <div class="fact"><b>1.3 kB</b><p>The whole 13-16-4 neural network of one team: 318 parameters.</p></div>
+      <div class="fact"><b>2.45 million</b><p>Accelerometer and gyroscope values in the committed recordings, from 408,975 samples on six axes.</p></div>
+      <div class="fact"><b>83.5 → 72.9 %</b><p>One team's accuracy on training data and then on a completely new recording. This gap is why whole recordings are split before windowing.</p></div>
+      <div class="fact"><b>1 minute</b><p>The time between the commits <code>bug fix</code> and <code>bug fix2</code>.</p></div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>The afternoon in commits</h2>
+    <p>Commits per half hour during the lab, all teams together. The rush came in the last hour: 38 commits between 16:00 and 16:30.</p>
+    <div>
+      <div class="cols" role="img" aria-label="Commits per half hour from 13:00 to 17:30: 12, 31, 24, 30, 25, 29, 38, 26, 6. Peak 38 at 16:00.">
+        <div class="col" tabindex="0" style="height:30%" data-tip="13:00 · 12 commits"></div>
+        <div class="col" tabindex="0" style="height:77.5%" data-tip="13:30 · 31 commits"></div>
+        <div class="col" tabindex="0" style="height:60%" data-tip="14:00 · 24 commits"></div>
+        <div class="col" tabindex="0" style="height:75%" data-tip="14:30 · 30 commits"></div>
+        <div class="col" tabindex="0" style="height:62.5%" data-tip="15:00 · 25 commits"></div>
+        <div class="col" tabindex="0" style="height:72.5%" data-tip="15:30 · 29 commits"></div>
+        <div class="col peak" tabindex="0" style="height:95%" data-tip="16:00 · 38 commits"></div>
+        <div class="col" tabindex="0" style="height:65%" data-tip="16:30 · 26 commits"></div>
+        <div class="col" tabindex="0" style="height:15%" data-tip="17:00 · 6 commits"></div>
+      </div>
+      <div class="ticks"><span>13:00</span><span>13:30</span><span>14:00</span><span>14:30</span><span>15:00</span><span>15:30</span><span>16:00</span><span>16:30</span><span>17:00</span></div>
+    </div>
+    <p class="note">The middle line marks 20 commits and the top of the chart is 40. Six of the 227 commits fall outside this window, three of them from the evening before the lab.</p>
+  </section>
+
+  <section class="stack">
+    <h2>How much signal you recorded</h2>
+    <p>Minutes of accelerometer and gyroscope data per team. Paler bars are estimates.</p>
+    <div class="rows">
+      <div class="row"><span class="label">PRM_application_IV…</span><div class="track"><div class="fill" style="width:96.8%"></div></div><span class="val">24.2 min</span></div>
+      <div class="row"><span class="label">Real-time-AI-on-a…</span><div class="track"><div class="fill" style="width:84%"></div></div><span class="val">21.0 min</span></div>
+      <div class="row"><span class="label">esp32s3-breathing…</span><div class="track"><div class="fill" style="width:81.2%"></div></div><span class="val">20.3 min</span></div>
+      <div class="row"><span class="label">ESP32</span><div class="track"><div class="fill" style="width:80.8%"></div></div><span class="val">20.2 min</span></div>
+      <div class="row"><span class="label">HiJack_breathing</span><div class="track"><div class="fill" style="width:56%"></div></div><span class="val">14.0 min</span></div>
+      <div class="row"><span class="label">MPA-PRM_Real-time…</span><div class="track"><div class="fill" style="width:55.8%;opacity:.45"></div></div><span class="val">≈14 min</span></div>
+      <div class="row"><span class="label">AppII-realtime…</span><div class="track"><div class="fill" style="width:55.8%;opacity:.45"></div></div><span class="val">≈14 min</span></div>
+      <div class="row"><span class="label">StisHik</span><div class="track"><div class="fill" style="width:55.8%;opacity:.45"></div></div><span class="val">≈14 min</span></div>
+      <div class="row"><span class="label">PRM_project_2</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="val">12.0 min</span></div>
+      <div class="row"><span class="label">Seiros-RT</span><div class="track"><div class="fill" style="width:45.6%"></div></div><span class="val">11.4 min</span></div>
+      <div class="row"><span class="label">esp32-breathing…</span><div class="track"><div class="fill" style="width:30%"></div></div><span class="val">7.5 min</span></div>
+      <div class="row"><span class="label">RT-edge</span><div class="track"><div class="fill" style="width:24.4%"></div></div><span class="val">6.1 min</span></div>
+      <div class="row"><span class="label">prm-realtime-ai</span><div class="track"><div class="fill" style="width:11.2%"></div></div><span class="val">2.8 min</span></div>
+    </div>
+    <p class="note">Three teams kept their recordings out of the repository, so they are counted at the mean of the other ten teams: 14 minutes and 24.5 recordings. Measured total of the ten teams: 139.5 minutes and 245 recordings.</p>
+  </section>
+
+  <section class="stack">
+    <h2>What ran on the chip</h2>
+    <p>Eight of the 13 devices ran something other than a neural network, and they did fine. One team compared a network with spectral rules and shipped the rules.</p>
+    <div class="tallies">
+      <div class="stack"><h3>Model on the board</h3><div class="rows">
+        <div class="row"><span class="label">Small neural network</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">5</span></div>
+        <div class="row"><span class="label">Decision tree</span><div class="track"><div class="fill" style="width:60%"></div></div><span class="val">3</span></div>
+        <div class="row"><span class="label">Logistic regression</span><div class="track"><div class="fill" style="width:40%"></div></div><span class="val">2</span></div>
+        <div class="row"><span class="label">Random forest</span><div class="track"><div class="fill" style="width:40%"></div></div><span class="val">2</span></div>
+        <div class="row"><span class="label">Spectral rules</span><div class="track"><div class="fill" style="width:20%"></div></div><span class="val">1</span></div>
+      </div></div>
+      <div class="stack"><h3>Firmware toolchain</h3><div class="rows">
+        <div class="row"><span class="label">PlatformIO</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">8</span></div>
+        <div class="row"><span class="label">Arduino sketch</span><div class="track"><div class="fill" style="width:50%"></div></div><span class="val">4</span></div>
+        <div class="row"><span class="label">MicroPython</span><div class="track"><div class="fill" style="width:12.5%"></div></div><span class="val">1</span></div>
+      </div></div>
+      <div class="stack"><h3>AI coding agents</h3><div class="rows">
+        <div class="row"><span class="label">Claude Code</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="val">9</span></div>
+        <div class="row"><span class="label">OpenAI Codex</span><div class="track"><div class="fill" style="width:44.4%"></div></div><span class="val">4</span></div>
+        <div class="row"><span class="label">Antigravity / Gemini</span><div class="track"><div class="fill" style="width:22.2%"></div></div><span class="val">2</span></div>
+      </div><p class="note">Two teams combined two agents, so the counts add up to 15.</p></div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>Team by team</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th scope="col">Repository</th><th scope="col">Toolchain</th><th scope="col">Model on the board</th><th scope="col">AI agent</th><th scope="col" class="num">Recordings</th><th scope="col" class="num">Minutes</th></tr></thead>
+        <tbody>
+          <tr><td class="repo">MPA-PRM_Real-time_microcontroller</td><td>PlatformIO</td><td>Small neural network</td><td>Claude Code</td><td class="num">≈24.5</td><td class="num">≈14</td></tr>
+          <tr><td class="repo">ESP32</td><td>PlatformIO</td><td>Logistic regression</td><td>Claude Code</td><td class="num">25</td><td class="num">20.2</td></tr>
+          <tr><td class="repo">esp32-breathing-monitor</td><td>Arduino sketch</td><td>Random forest, 8 trees</td><td>Antigravity / Gemini</td><td class="num">16</td><td class="num">7.5</td></tr>
+          <tr><td class="repo">AppII-realtime-edge-devices</td><td>Arduino sketch</td><td>Neural network 26-16-4</td><td>Claude Code</td><td class="num">≈24.5</td><td class="num">≈14</td></tr>
+          <tr><td class="repo">Seiros-RT</td><td>Arduino sketch</td><td>Decision tree</td><td>Claude Code</td><td class="num">12</td><td class="num">11.4</td></tr>
+          <tr><td class="repo">PRM_application_IV_live_cosi</td><td>Arduino sketch</td><td>Logistic regression</td><td>Claude Code</td><td class="num">64</td><td class="num">24.2</td></tr>
+          <tr><td class="repo">esp32s3-breathing-monitor</td><td>PlatformIO</td><td>Neural network 13-16-4</td><td>Codex, Claude Code</td><td class="num">31</td><td class="num">20.3</td></tr>
+          <tr><td class="repo">prm-realtime-ai</td><td>PlatformIO</td><td>Decision tree, depth 4</td><td>Claude Code</td><td class="num">5</td><td class="num">2.8</td></tr>
+          <tr><td class="repo">HiJack_breathing</td><td>PlatformIO</td><td>Small neural network</td><td>Codex</td><td class="num">42</td><td class="num">14.0</td></tr>
+          <tr><td class="repo">Real-time-AI-on-a-microcontroller---PRM</td><td>PlatformIO</td><td>Small neural network</td><td>Claude Code</td><td class="num">25</td><td class="num">21.0</td></tr>
+          <tr><td class="repo">StisHik</td><td>ESP-IDF on PlatformIO</td><td>Spectral rules</td><td>Codex</td><td class="num">≈24.5</td><td class="num">≈14</td></tr>
+          <tr><td class="repo">RT-edge</td><td>MicroPython</td><td>Random forest, 25 trees, as plain if/else</td><td>Claude Code</td><td class="num">1</td><td class="num">6.1</td></tr>
+          <tr><td class="repo">PRM_project_2</td><td>PlatformIO</td><td>Decision tree</td><td>Codex, Antigravity / Gemini</td><td class="num">24</td><td class="num">12.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Taken from all branches of the repositories on 10 November 2026. ≈ marks the mean of the other ten teams, used where the recordings are not in the repository. Accuracies are left out on purpose, because every team split its data differently and the figures cannot be compared.</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  var svg = document.getElementById("trace");
+  var seed = 7;
+  function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647 - 0.5; }
+  var segments = [
+    ["--led-green", function (t) { return 16 * Math.sin(t / 22); }],
+    ["--led-red", function (t) { return 13 * Math.sin(t / 5.5); }],
+    ["--led-blue", function () { return 1.6 * rnd(); }],
+    ["--led-magenta", function (t) { return 84 * rnd() * (0.7 + 0.3 * Math.sin(t / 3)); }]
+  ];
+  segments.forEach(function (segment, index) {
+    var d = "";
+    for (var x = index * 250; x <= (index + 1) * 250; x += 2) {
+      d += (d ? "L" : "M") + x + " " + (48 - segment[1](x)).toFixed(1);
+    }
+    var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "var(" + segment[0] + ")");
+    path.setAttribute("stroke-width", "2");
+    path.setAttribute("vector-effect", "non-scaling-stroke");
+    path.setAttribute("stroke-linejoin", "round");
+    svg.appendChild(path);
+  });
+})();
+</script>
+</body>
+</html>
